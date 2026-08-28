@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Ballast</title>
+<meta name="color-scheme" content="dark light">
+<style>
+:root {
+  --ink: #ffffff; --surface: #f4f5fa; --line: #dcdfeb;
+  --text: #14172a; --muted: #5b6180; --accent: #a86413;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #080b16; --surface: #121629; --line: #2a3157;
+    --text: #f0f3ff; --muted: #9aa2c6; --accent: #ffb454;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0 1.25rem 5rem;
+  background: var(--ink); color: var(--text);
+  font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 42rem; margin: 0 auto; }
+header { padding: 3.5rem 0 2rem; border-bottom: 1px solid var(--line); margin-bottom: 2.5rem; }
+.brand { font-size: 1.05rem; font-weight: 600; letter-spacing: .01em; text-decoration: none; color: var(--text); }
+.brand span { color: var(--accent); }
+h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .5rem; letter-spacing: -.01em; }
+h2 { font-size: 1.15rem; margin: 2.5rem 0 .75rem; letter-spacing: -.005em; }
+p, li { color: var(--muted); }
+p { margin: 0 0 1rem; }
+strong { color: var(--text); font-weight: 600; }
+ul { padding-left: 1.15rem; margin: 0 0 1rem; }
+li { margin-bottom: .5rem; }
+a { color: var(--accent); }
+.updated { color: var(--muted); font-size: .9rem; margin-bottom: 2rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem 1.4rem; margin: 0 0 1rem; }
+.card h2 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+.mail { font-size: 1.1rem; font-weight: 600; }
+nav { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: .95rem; }
+nav a { margin-right: 1.25rem; }
+footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="brand" href="index.html">Ballast<span>.</span></a></header>
+<h1>Privacy Policy — Ballast</h1>
+<p><strong>Last updated: 29 August 2026</strong></p>
+<p>Ballast is a tool for tracking and changing a private habit. Everything below follows from one decision: the app has no account, no login, and no server of its own. What you write in Ballast stays on your phone.</p>
+<h2>What Ballast stores on your device</h2>
+<p>All of it stays in Ballast&#x27;s own storage on your iPhone, and none of it is transmitted anywhere:</p>
+<ul>
+<li>your start date, streaks, and logged urges and slips, including any triggers and notes</li>
+<li>your daily check-ins and written reflections</li>
+<li>the reasons you write during setup, and the optional picture you can keep with them</li>
+<li>your habits and their completion history</li>
+<li>which articles you&#x27;ve read, milestones you&#x27;ve celebrated, and program steps you&#x27;ve completed</li>
+<li>the name, phone number and message for your optional support contact</li>
+</ul>
+<p>Deleting the app deletes all of it. There is no copy anywhere else, and no way for us to recover it — which is the trade for there being no way for anyone else to reach it either.</p>
+<h2>What leaves your device</h2>
+<p><strong>Purchases.</strong> Ballast uses RevenueCat to manage subscriptions and restore purchases. When you buy, restore, or open the paywall, RevenueCat receives purchase and receipt information, an anonymous app user ID it generates, a device identifier, and basic app and OS version details. This is used to work out whether you have an active subscription, and nothing else. It is not used for advertising, and it is not shared with data brokers. RevenueCat&#x27;s own policy is at <a href="https://www.revenuecat.com/privacy">https://www.revenuecat.com/privacy</a>.</p>
+<p><strong>Apple.</strong> Purchases are processed by Apple under Apple&#x27;s own privacy policy. We never see your payment details.</p>
+<p>That is the complete list. There is no analytics SDK, no advertising SDK, no crash reporter, and no third-party tracking of any kind in this app.</p>
+<h2>Things people reasonably assume, that aren&#x27;t true here</h2>
+<ul>
+<li><strong>Ballast does not read your browsing, your screen time, or any other app.</strong> It knows only what you type into it.</li>
+<li><strong>Ballast does not access your photo library.</strong> The optional picture beside your reasons is chosen through Apple&#x27;s photo picker, which runs outside the app: Ballast is handed the one image you pick and nothing else. The date and location your camera attached to it are removed before it is saved.</li>
+<li><strong>Ballast does not access your contacts.</strong> The optional support contact is a name and number you type yourself, stored on your device. Ballast never uploads it.</li>
+<li><strong>Ballast does not send messages for you.</strong> Tapping &quot;Text {name}&quot; opens Apple&#x27;s Messages app with a draft. You decide whether to send it.</li>
+<li><strong>Face ID / Touch ID.</strong> If you turn on the app lock, authentication is handled entirely by iOS. Ballast is told only whether it succeeded. Your biometric data never reaches the app.</li>
+<li><strong>Notifications</strong> are scheduled locally on your device. Nothing is sent through a server.</li>
+<li><strong>Widgets and Siri shortcuts</strong> read from a shared container on your device only.</li>
+</ul>
+<h2>Tracking</h2>
+<p>Ballast does not track you. It does not link your data with third-party data for advertising, and it does not share data with data brokers. It never requests the advertising identifier.</p>
+<h2>Your data, your control</h2>
+<ul>
+<li><strong>Export.</strong> Settings → Export my data produces a complete JSON file of everything Ballast holds, which you can save or send wherever you like.</li>
+<li><strong>Delete.</strong> Deleting the app removes everything on the device. For purchase records held by RevenueCat, email us and we will request deletion on your behalf.</li>
+</ul>
+<h2>Children</h2>
+<p>Ballast is rated 16+ and is not directed at children under 13. We do not knowingly collect any information from children under 13.</p>
+<h2>Not medical advice</h2>
+<p>Ballast is a self-tracking and educational tool. It is not treatment, it does not diagnose anything, and it is not a substitute for professional care. If this is affecting your work, your relationships or your safety, please talk to someone qualified.</p>
+<h2>Changes</h2>
+<p>If this policy changes, the date at the top changes with it, and material changes will be noted in the app&#x27;s release notes.</p>
+<h2>Contact</h2>
+<p>Questions about privacy, or a deletion request: <strong><a href="mailto:atabany.apps@gmail.com">atabany.apps@gmail.com</a></strong></p>
+<nav><a href="index.html">Ballast</a> <strong>Privacy</strong> <a href="support.html">Support</a></nav>
+<footer>Ballast is made by Mohamed Elatabany. This site sets no cookies and runs no analytics.</footer>
+</div>
+</body>
+</html>
