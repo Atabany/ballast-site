@@ -1,0 +1,12 @@
+# Ballast: Quit PMO
+
+Private on-device urge support and streak tracking for adults quitting PMO.
+Requires iOS 26 or later. No account. Full urge flow and slip support are free.
+Pro adds Insights, the remaining course, full history, extra habits and plans, and weekly review.
+Apple and RevenueCat process purchases and identifiers; personal entries stay on device.
+A self-tracking and educational tool, not treatment.
+
+- [Official website](https://atabany.github.io/ballast-site/)
+- [App Store](https://apps.apple.com/app/id6803731313)
+- [Support](https://atabany.github.io/ballast-site/support.html)
+- [Privacy](https://atabany.github.io/ballast-site/privacy.html)
