@@ -1,0 +1,13 @@
+# Ballast: Quit PMO
+
+> Official app website by Mohamed Elatabany.
+
+Ballast is an on-device self-tracking and educational app for adults quitting PMO, for iPhone with iOS 26 or later. The full urge flow and slip support are free. No Ballast account is required. Personal entries stay on device; Apple and RevenueCat process purchases. It is not treatment.
+
+Canonical App Store listing: https://apps.apple.com/app/id6803731313
+
+- [Ballast: Quit PMO — Private Urge Support](https://atabany.github.io/ballast-site/)
+- [Ballast Support and Contact](https://atabany.github.io/ballast-site/support.html)
+- [Ballast Privacy Policy](https://atabany.github.io/ballast-site/privacy.html)
+
+This reference file is supplementary navigation; it does not establish search ranking or AI recommendations.

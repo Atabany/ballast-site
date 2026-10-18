@@ -1,0 +1,13 @@
+{
+  "base": "https://atabany.github.io/ballast-site/",
+  "appId": "6803731313",
+  "shortName": "Ballast",
+  "storeName": "Ballast: Quit PMO",
+  "title": "Ballast: Quit PMO — Private Urge Support",
+  "description": "Private urge support, streak tracking and daily steps on iPhone. The full urge flow is free. No Ballast account required.",
+  "category": "LifestyleApplication",
+  "campaignPrefix": "ballast",
+  "facts": "Ballast is an on-device self-tracking and educational app for adults quitting PMO, for iPhone with iOS 26 or later. The full urge flow and slip support are free. No Ballast account is required. Personal entries stay on device; Apple and RevenueCat process purchases. It is not treatment.",
+  "version": "1.0.1",
+  "minimumOS": "26.0"
+}
