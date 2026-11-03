@@ -87,7 +87,8 @@ All of these are true of the spec in `docs/REBUILD.md`, not of the live 1.0.1. N
 | Urge flow: tap what's happening, own card and reason, breathe, ride the wave, or plan | Home, guide, tool page | Actual flow |
 | One plan free; unlimited with Pro; free/Pro table | Home, comparison, llms | `Services/FreeTier.swift`; `FreeTierTests` |
 | Clear days never reset; waypoints 1, 3, 7, 14, 30, 60, 100, 180, 365; slips as ordinary marks | Home, slip page, comparison, llms | Voyage tab |
-| Backup and restore through a file, free | Home, support, privacy, comparison | Round trip on a device |
+| Backup and restore through a file, free; Shield settings stay out of the backup | Home, support, privacy, comparison | Round trip on a device |
+| A finished wait opens a 15-minute window | Support | `ShieldPolicy.releaseWindow` |
 | After-slip "next hour" support and the day-after card; no offers at that moment | Slip page | Log a slip |
 | Setup asks how long since the last time | QUITTR page | Onboarding |
 | `softwareVersion` 1.1.0 | JSON-LD, `discovery.json` | Set to the live version |
