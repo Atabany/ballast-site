@@ -1,0 +1,3 @@
+# GitHub Pages builds with Jekyll. Underscore folders such as _ops are not published.
+exclude:
+  - README.md

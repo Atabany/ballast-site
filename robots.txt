@@ -1,4 +1,45 @@
-# Project sites use the host-root robots.txt policy. This file documents the intended policy.
+# A project subpath does not control the host-root robots.txt. This file becomes
+# authoritative once SITE_URL is the root of Ballast's own domain. See _ops/DOMAIN_MOVE.md.
 User-agent: *
 Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
 Sitemap: https://atabany.github.io/ballast-site/sitemap.xml

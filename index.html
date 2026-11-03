@@ -3,110 +3,169 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ballast: Quit PMO — Private Urge Support</title>
-
-
-
-
-
-
-
-<meta name="color-scheme" content="dark light">
-<style>
-:root {
-  --ink: #ffffff; --surface: #f4f5fa; --line: #dcdfeb;
-  --text: #14172a; --muted: #5b6180; --accent: #a86413;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #080b16; --surface: #121629; --line: #2a3157;
-    --text: #f0f3ff; --muted: #9aa2c6; --accent: #ffb454;
-  }
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0; padding: 0 1.25rem 5rem;
-  background: var(--ink); color: var(--text);
-  font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  -webkit-text-size-adjust: 100%;
-}
-.wrap { max-width: 42rem; margin: 0 auto; }
-header { padding: 3.5rem 0 2rem; border-bottom: 1px solid var(--line); margin-bottom: 2.5rem; }
-.brand { font-size: 1.05rem; font-weight: 600; letter-spacing: .01em; text-decoration: none; color: var(--text); }
-.brand span { color: var(--accent); }
-.brand { display: inline-flex; align-items: center; gap: .6rem; }
-.brand img { width: 44px; height: 44px; border-radius: 10px; }
-.store-link { display: inline-flex; align-items: center; gap: .8rem; margin: .75rem 0; }
-.store-link img { height: 44px; width: auto; }
-.store-link .app-icon { width: 56px; height: 56px; border-radius: 13px; }
-.facts { font-size: .9rem; }
-h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .5rem; letter-spacing: -.01em; }
-h2 { font-size: 1.15rem; margin: 2.5rem 0 .75rem; letter-spacing: -.005em; }
-p, li { color: var(--muted); }
-p { margin: 0 0 1rem; }
-strong { color: var(--text); font-weight: 600; }
-ul { padding-left: 1.15rem; margin: 0 0 1rem; }
-li { margin-bottom: .5rem; }
-a { color: var(--accent); }
-.updated { color: var(--muted); font-size: .9rem; margin-bottom: 2rem; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem 1.4rem; margin: 0 0 1rem; }
-.card h2 { margin-top: 0; }
-.card p:last-child { margin-bottom: 0; }
-.mail { font-size: 1.1rem; font-weight: 600; }
-nav { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: .95rem; }
-nav a { margin-right: 1.25rem; }
-footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; }
-</style>
-<!-- discovery-meta:start --><meta name="description" content="Private urge support, streak tracking and daily steps on iPhone. The full urge flow is free. No Ballast account required."><link rel="canonical" href="https://atabany.github.io/ballast-site/"><meta name="apple-itunes-app" content="app-id=6803731313"><meta property="og:type" content="website"><meta property="og:title" content="Ballast: Quit PMO — Private Urge Support"><meta property="og:description" content="Private urge support, streak tracking and daily steps on iPhone. The full urge flow is free. No Ballast account required."><meta property="og:url" content="https://atabany.github.io/ballast-site/"><meta property="og:image" content="https://atabany.github.io/ballast-site/assets/discovery-icon.png"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="assets/discovery.css?v=20261018"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebPage", "name": "Ballast: Quit PMO — Private Urge Support", "url": "https://atabany.github.io/ballast-site/", "description": "Private urge support, streak tracking and daily steps on iPhone. The full urge flow is free. No Ballast account required.", "author": {"@type": "Person", "name": "Mohamed Elatabany", "url": "https://github.com/Atabany"}}, {"@context": "https://schema.org", "@type": "MobileApplication", "@id": "https://atabany.github.io/ballast-site/#app", "name": "Ballast: Quit PMO", "url": "https://atabany.github.io/ballast-site/", "downloadUrl": "https://apps.apple.com/app/id6803731313", "operatingSystem": "iOS 26.0+", "applicationCategory": "LifestyleApplication", "softwareVersion": "1.0.1", "image": "https://atabany.github.io/ballast-site/assets/discovery-icon.png", "description": "Ballast is an on-device self-tracking and educational app for adults quitting PMO, for iPhone with iOS 26 or later. The full urge flow and slip support are free. No Ballast account is required. Personal entries stay on device; Apple and RevenueCat process purchases. It is not treatment.", "author": {"@type": "Person", "name": "Mohamed Elatabany", "url": "https://github.com/Atabany"}}]</script><!-- discovery-meta:end --></head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<title>Ballast: Quit PMO. Your plan for the next urge</title>
+<meta name="description" content="An iPhone app for quitting porn and PMO: a one-tap filter, your own if-then urge plans and progress a slip can&#x27;t erase. Private and secular.">
+<link rel="canonical" href="https://atabany.github.io/ballast-site/">
+<meta name="apple-itunes-app" content="app-id=6803731313">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#120E17">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ballast">
+<meta property="og:title" content="Ballast: Quit PMO. Your plan for the next urge">
+<meta property="og:description" content="An iPhone app for quitting porn and PMO: a one-tap filter, your own if-then urge plans and progress a slip can&#x27;t erase. Private and secular.">
+<meta property="og:url" content="https://atabany.github.io/ballast-site/">
+<meta property="og:image" content="https://atabany.github.io/ballast-site/assets/og/index.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Layered flat swells under a dawn sky, with the words: Your plan for the next urge.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ballast: Quit PMO. Your plan for the next urge">
+<meta name="twitter:description" content="An iPhone app for quitting porn and PMO: a one-tap filter, your own if-then urge plans and progress a slip can&#x27;t erase. Private and secular.">
+<meta name="twitter:image" content="https://atabany.github.io/ballast-site/assets/og/index.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="assets/site.css?v=7edd5fcf">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebSite", "@id": "https://atabany.github.io/ballast-site/#site", "name": "Ballast", "url": "https://atabany.github.io/ballast-site/", "inLanguage": "en", "description": "An iPhone app for quitting porn and PMO: a one-tap filter, your own if-then urge plans and progress a slip can't erase. Private and secular."}, {"@context": "https://schema.org", "@type": "MobileApplication", "@id": "https://atabany.github.io/ballast-site/#app", "name": "Ballast: Quit PMO", "url": "https://atabany.github.io/ballast-site/", "downloadUrl": "https://apps.apple.com/app/id6803731313", "installUrl": "https://apps.apple.com/app/id6803731313", "operatingSystem": "iOS 26.0 or later", "applicationCategory": "HealthApplication", "softwareVersion": "1.1.0", "image": "https://atabany.github.io/ballast-site/assets/discovery-icon.png", "description": "Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a one-tap iOS adult-website filter, if-then urge plans and progress that a slip cannot erase. The full urge flow, slip support and the filter are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.", "author": {"@type": "Person", "@id": "https://atabany.github.io/ballast-site/about.html#author", "name": "Mohamed Elatabany", "url": "https://atabany.github.io/ballast-site/about.html", "sameAs": ["https://github.com/Atabany"]}, "publisher": {"@type": "Person", "@id": "https://atabany.github.io/ballast-site/about.html#author", "name": "Mohamed Elatabany", "url": "https://atabany.github.io/ballast-site/about.html", "sameAs": ["https://github.com/Atabany"]}}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is Ballast free?", "acceptedAnswer": {"@type": "Answer", "text": "The whole urge flow, slip support, the adult-website filter, your streak and clear days, backup and restore are free for good. Pro adds the commitment lock, app shields, unlimited urge plans, insights, the rest of the course and library, and full history."}}, {"@type": "Question", "name": "Does Ballast block websites?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. One tap turns on the iOS adult-website filter through Apple's Family Controls. It adds friction, not a wall: a phone's owner can undo it in Settings, and no filter catches everything."}}, {"@type": "Question", "name": "Does anything I write leave my phone?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no account and no server, and personal entries stay on your iPhone. Ballast never sees your browsing or which apps you pick to shield. Apple and RevenueCat process purchases."}}, {"@type": "Question", "name": "Is Ballast treatment?", "acceptedAnswer": {"@type": "Answer", "text": "No. Ballast is a self-tracking and educational tool that uses skills from CBT and ACT. It does not diagnose anything and does not replace professional care."}}]}]</script>
+</head>
 <body>
-<div class="wrap">
-<header><a class="brand" href="index.html"><img src="assets/app-icon.png" alt="" width="44" height="44">Ballast<span>.</span></a>
-<div><a class="store-link" href="https://apps.apple.com/app/apple-store/id6803731313?pt=127826363&ct=ballast_index&mt=8" aria-label="Download Ballast on the App Store"><img src="assets/app-store-badge.svg" alt="Download on the App Store" width="132" height="44"></a></div></header>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap head-row"><a class="brand" href="index.html"><img src="assets/icon-64.png" alt="" width="32" height="32"><span>Ballast</span></a><nav class="site-nav" aria-label="Main"><a href="if-then-urge-plan.html">Plan tool</a><a href="index.html#guides">Guides</a><a href="best-apps-to-quit-porn-compared.html">Compare</a><a href="about.html">About</a></nav><a class="head-badge" href="https://apps.apple.com/app/apple-store/id6803731313?pt=127826363&amp;ct=ballast_index&amp;mt=8" aria-label="Download Ballast on the App Store"><img src="assets/app-store-badge.svg" alt="Download on the App Store" width="120" height="40"></a></div></header>
+<main id="main"><section class="hero">
+<div class="wrap hero-copy">
+<h1>Your plan for the next urge.</h1>
+<p class="promise">Private. Secular. No brain myths.</p>
+<p class="hero-lede">Ballast is an iPhone app for quitting porn and compulsive masturbation (PMO). It puts some friction in front of the easiest path, hands you your own plan when an urge hits, and keeps a record of progress that a slip can't erase.</p>
+<a class="store" href="https://apps.apple.com/app/apple-store/id6803731313?pt=127826363&amp;ct=ballast_index&amp;mt=8" aria-label="Download Ballast on the App Store"><img class="icon" src="assets/icon-112.png" alt="" width="56" height="56"><img class="badge" src="assets/app-store-badge.svg" alt="Download on the App Store" width="135" height="45"></a>
+<p class="hero-meta">iPhone, iOS 26 or later · No account · The whole urge flow is free, for good</p>
+</div>
+<div class="hero-scene"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" width="1600" height="560" preserveAspectRatio="xMidYMax slice" class="horizon" aria-hidden="true" focusable="false"><rect x="0" y="0.0" width="1600" height="25.9" fill="#120E17"/><rect x="0" y="24.9" width="1600" height="25.9" fill="#1A1320"/><rect x="0" y="49.8" width="1600" height="25.9" fill="#241829"/><rect x="0" y="74.7" width="1600" height="25.9" fill="#342033"/><rect x="0" y="99.6" width="1600" height="25.9" fill="#4F2A3D"/><rect x="0" y="124.4" width="1600" height="25.9" fill="#7A3A45"/><rect x="0" y="149.3" width="1600" height="25.9" fill="#B4574D"/><rect x="0" y="174.2" width="1600" height="25.9" fill="#E57F59"/><rect x="0" y="199.1" width="1600" height="25.9" fill="#FF9D6C"/><rect x="0" y="224.0" width="1600" height="336.0" fill="#6B3A4C"/><circle cx="1152" cy="211" r="42" fill="#FFD08A"/><rect x="0" y="224.0" width="1600" height="336.0" fill="#6B3A4C"/><rect x="1089" y="233" width="126" height="3" fill="#FFD08A" opacity="0.70"/><rect x="1108" y="246" width="88" height="3" fill="#FFD08A" opacity="0.58"/><rect x="1123" y="259" width="59" height="3" fill="#FFD08A" opacity="0.46"/><rect x="1134" y="272" width="35" height="3" fill="#FFD08A" opacity="0.34"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" width="1600" height="560" preserveAspectRatio="xMidYMax slice" class="swell swell-0" aria-hidden="true" focusable="false"><g><path d="M-96 294C-85 292 -53 282 -32 281C-11 281 11 289 32 292C53 295 75 298 96 300C117 302 139 303 160 304C181 305 203 306 224 306C245 306 267 306 288 306C309 306 331 306 352 305C373 304 395 302 416 300C437 298 459 294 480 292C501 290 523 287 544 289C565 291 587 299 608 303C629 307 651 310 672 313C693 315 715 317 736 318C757 319 779 320 800 320C821 321 843 321 864 321C885 320 907 319 928 318C949 316 971 313 992 310C1013 307 1035 300 1056 298C1077 296 1099 297 1120 298C1141 300 1163 305 1184 308C1205 310 1227 311 1248 312C1269 313 1291 313 1312 313C1333 313 1355 312 1376 312C1397 311 1419 310 1440 309C1461 307 1483 305 1504 303C1525 300 1547 297 1568 293C1589 290 1611 281 1632 281C1653 280 1685 287 1696 288L1696 564L-96 564Z" fill="#46293F"/><path d="M-96 294C-85 292 -53 282 -32 281C-11 281 11 289 32 292C53 295 75 298 96 300C117 302 139 303 160 304C181 305 203 306 224 306C245 306 267 306 288 306C309 306 331 306 352 305C373 304 395 302 416 300C437 298 459 294 480 292C501 290 523 287 544 289C565 291 587 299 608 303C629 307 651 310 672 313C693 315 715 317 736 318C757 319 779 320 800 320C821 321 843 321 864 321C885 320 907 319 928 318C949 316 971 313 992 310C1013 307 1035 300 1056 298C1077 296 1099 297 1120 298C1141 300 1163 305 1184 308C1205 310 1227 311 1248 312C1269 313 1291 313 1312 313C1333 313 1355 312 1376 312C1397 311 1419 310 1440 309C1461 307 1483 305 1504 303C1525 300 1547 297 1568 293C1589 290 1611 281 1632 281C1653 280 1685 287 1696 288" fill="none" stroke="#FFD08A" stroke-width="1.5" opacity="0.55"/></g></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" width="1600" height="560" preserveAspectRatio="xMidYMax slice" class="swell swell-1" aria-hidden="true" focusable="false"><g><path d="M-96 381C-85 383 -53 390 -32 393C-11 396 11 399 32 401C53 403 75 405 96 406C117 407 139 407 160 407C181 408 203 408 224 408C245 408 267 407 288 406C309 405 331 403 352 401C373 399 395 395 416 392C437 388 459 383 480 378C501 373 523 367 544 361C565 356 587 346 608 346C629 346 651 357 672 361C693 366 715 370 736 373C757 377 779 380 800 382C821 384 843 386 864 387C885 388 907 388 928 388C949 388 971 387 992 387C1013 386 1035 385 1056 384C1077 383 1099 382 1120 381C1141 379 1163 377 1184 375C1205 373 1227 370 1248 366C1269 363 1291 359 1312 355C1333 350 1355 345 1376 340C1397 334 1419 324 1440 322C1461 321 1483 325 1504 329C1525 333 1547 341 1568 346C1589 351 1611 356 1632 360C1653 364 1685 369 1696 370L1696 564L-96 564Z" fill="#2E2033"/></g></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" width="1600" height="560" preserveAspectRatio="xMidYMax slice" class="swell swell-2" aria-hidden="true" focusable="false"><g><path d="M-96 471C-85 470 -53 470 -32 469C-11 468 11 467 32 466C53 465 75 464 96 463C117 461 139 460 160 458C181 456 203 454 224 451C245 448 267 445 288 442C309 438 331 434 352 430C373 426 395 421 416 416C437 411 459 405 480 399C501 394 523 384 544 381C565 379 587 382 608 385C629 389 651 396 672 402C693 407 715 412 736 416C757 421 779 425 800 428C821 432 843 435 864 438C885 441 907 444 928 446C949 448 971 450 992 451C1013 453 1035 454 1056 455C1077 456 1099 456 1120 457C1141 458 1163 459 1184 459C1205 460 1227 460 1248 460C1269 460 1291 460 1312 460C1333 459 1355 458 1376 457C1397 455 1419 453 1440 451C1461 449 1483 446 1504 443C1525 439 1547 436 1568 431C1589 427 1611 422 1632 418C1653 414 1685 409 1696 408L1696 564L-96 564Z" fill="#1E1824"/></g></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" width="1600" height="560" preserveAspectRatio="xMidYMax slice" class="swell swell-3" aria-hidden="true" focusable="false"><g><path d="M-96 535C-85 535 -53 534 -32 534C-11 533 11 532 32 531C53 529 75 528 96 526C117 524 139 522 160 519C181 516 203 514 224 510C245 507 267 504 288 500C309 496 331 492 352 488C373 483 395 474 416 474C437 475 459 485 480 491C501 496 523 502 544 507C565 513 587 518 608 523C629 527 651 532 672 536C693 540 715 544 736 547C757 550 779 553 800 556C821 559 843 561 864 563C885 565 907 566 928 568C949 569 971 570 992 571C1013 571 1035 572 1056 572C1077 572 1099 572 1120 572C1141 572 1163 572 1184 572C1205 572 1227 571 1248 571C1269 570 1291 569 1312 568C1333 567 1355 565 1376 563C1397 561 1419 559 1440 557C1461 554 1483 551 1504 548C1525 544 1547 541 1568 537C1589 533 1611 528 1632 523C1653 519 1685 511 1696 508L1696 564L-96 564Z" fill="#120E17"/></g></svg></div>
+</section>
 
-<h1>Quit PMO at your pace.</h1><!-- discovery-hero:start --><!-- discovery-hero:end -->
-<p>Private support for leaving adult content behind. Ballast puts your streak, your reasons
-   and a practical plan for hard moments in one place.</p>
-<p><strong>When an urge hits, the help is free.</strong> Breathe, reconnect with your reasons,
-   try a timed urge-surfing exercise, then check in with yourself.</p>
-<a class="store-link" href="https://apps.apple.com/app/apple-store/id6803731313?pt=127826363&amp;ct=ballast_home_hero&amp;mt=8">
-  <img class="app-icon" src="assets/app-icon.png" alt="Ballast app icon" width="56" height="56">
-  <img src="assets/app-store-badge.svg" alt="Download on the App Store" width="132" height="44">
-</a>
-<p class="facts">For iPhone · iOS 26 or later · No Ballast account required</p>
-<div class="card">
-  <h2>One day, then the next</h2>
-  <p>Track your streak, make a daily check-in and mark milestones. Log a slip as information
-     you can use to plan your next step. Keep your streak close with Home Screen and Lock Screen widgets.</p>
-</div>
-<div class="card">
-  <h2>A practical next step</h2>
-  <p>Try grounding exercises, read about urges and slips, or write an if-then plan for a
-     familiar trigger. Start with the free first week of the guided 30-day course.</p>
-</div>
-<div class="card">
-  <h2>Your notes stay with you</h2>
-  <p>Your journal, reasons and urge logs stay on your device. App lock and data export are
-     free. Apple and RevenueCat handle purchases and related identifiers; your personal
-     entries are not sent to them.</p>
-</div>
-<div class="card">
-  <h2>More depth with Ballast Pro</h2>
-  <p>Explore patterns in your logged urges with Insights, continue the course, read the rest
-     of the library and review your full history. Pro also adds extra plans and replacement
-     habits, plus a weekly review. Monthly, yearly and lifetime options are available.</p>
-</div>
-<p>Ballast is a self-tracking and educational tool, not treatment. If this is affecting your
-   work, relationships or safety, consider support from a qualified professional.</p>
-<!-- discovery-guides:start --><div class="card"><h2>Guides</h2><p><a href="block-porn-iphone-screen-time.html">How to block porn on iPhone with Screen Time</a> — The built-in iOS 26 Settings path for Limit Adult Websites, a passcode someone else keeps, what the filter misses, a seven-part setup checklist and a plan for urges.</p></div><!-- discovery-guides:end --><div class="card">
-  <h2>Pages</h2>
-  <p><a href="privacy.html">Privacy Policy</a> — what the app stores, and the short list of
-     what leaves your device.</p>
-  <p><a href="support.html">Support</a> — how to reach a human, restore a purchase, cancel, or
-     get your data out.</p>
-</div>
+<section class="wrap section" id="what-it-does">
+<p class="kicker">Three parts</p>
+<h2>A shield, a plan and a voyage</h2>
+<p class="lede">Each one answers something people complain about in this category: filters that break things or trap them, help that's behind a paywall at 1am, and streaks that vanish.</p>
 
-<!-- discovery-facts:start --><aside class="discovery-facts"><h2>App facts</h2><p>Ballast is an on-device self-tracking and educational app for adults quitting PMO, for iPhone with iOS 26 or later. The full urge flow and slip support are free. No Ballast account is required. Personal entries stay on device; Apple and RevenueCat process purchases. It is not treatment.</p><p>Made by <a href="https://github.com/Atabany">Mohamed Elatabany</a>. App Store listing checked 4 November 2026.</p></aside><!-- discovery-facts:end --><nav><strong>Ballast</strong> <a href="privacy.html">Privacy</a> <a href="support.html">Support</a></nav>
-<footer>Ballast is made by Mohamed Elatabany. This site sets no cookies and runs no analytics.</footer>
+<article class="pillar">
+<!-- slot:ballast-shield-filter-and-commitment-lock-iphone --><div class="panel"><img src="assets/horizon-night.svg" width="800" height="500" alt="" loading="lazy" decoding="async"></div>
+<h3>Shield</h3>
+<p class="say">One tap turns on the iOS adult-website filter. It sells friction, not walls.</p>
+<ul>
+<li><strong>Filter</strong> <span class="tag">FREE</span> Apple's adult-website filter, switched on from inside the app. It also turns off Safari private browsing, and you should know that before you tap.</li>
+<li><strong>Commitment lock</strong> <span class="tag tag-pro">PRO</span> Turning protection off then needs either a cool-off you chose in advance (10 minutes, 1 hour or 24 hours) or a code held by someone you trust. If that person can't be reached, a 24-hour wait always works. Nobody gets trapped.</li>
+<li><strong>App shields</strong> <span class="tag tag-pro">PRO</span> Pick apps in Apple's own picker and shield them until a time you choose, such as 7:00. The shield lifts the next time you open Ballast after that time.</li>
+</ul>
+<p>The limit, plainly: a phone's owner can undo any of this in Settings. If Pro ends, locks release and the filter stays under your control. <a href="block-porn-iphone-screen-time.html">The free Screen Time steps come first in our guide</a>, and you may not need more than those.</p>
+</article>
+
+<article class="pillar">
+<!-- slot:ballast-urge-flow-if-then-plan-card-iphone --><div class="panel"><img src="assets/horizon-dawn.svg" width="800" height="500" alt="" loading="lazy" decoding="async"></div>
+<h3>Urge plans</h3>
+<p class="say">When it hits, you get your own words, not a pep talk.</p>
+<ul>
+<li>One tap on what's happening. Your own triggers come first.</li>
+<li>Your if-then card and your own reason appear, written on a calmer day.</li>
+<li>You choose: breathe, ride the wave, or do the thing you planned. Then note how it went.</li>
+</ul>
+<p>The whole flow is free, always, and works with no plan saved and no signal. One plan is free; Pro makes them unlimited. <a href="if-then-urge-plan.html">Try writing one here in your browser</a>, no app needed.</p>
+</article>
+
+<article class="pillar">
+<!-- slot:ballast-voyage-route-clear-days-waypoints-iphone --><div class="panel"><img src="assets/horizon-day.svg" width="800" height="500" alt="" loading="lazy" decoding="async"></div>
+<h3>Voyage</h3>
+<p class="say">Clear days add up and never reset. A slip is data, not a verdict.</p>
+<ul>
+<li><strong>Clear days sailed</strong> accumulate for good. Your current run is still there, second.</li>
+<li>Waypoints at 1, 3, 7, 14, 30, 60, 100, 180 and 365 clear days. Slips sit on the route as ordinary marks.</li>
+<li>Backup and restore are free, through a file you keep. No account means no login to lose.</li>
+<li>Patterns, full history and a weekly review are in Pro <span class="tag tag-pro">PRO</span></li>
+</ul>
+<p>If a slip has just happened, <a href="what-to-do-after-a-slip.html">here's what to do in the next hour</a>.</p>
+</article>
+</section>
+
+<section class="wrap section" id="no-brain-myths">
+<div class="two">
+<div>
+<p class="kicker">No brain myths</p>
+<h2>What Ballast won't tell you</h2>
+<p><!--quoted:start-->This category sells "dopamine detox", "rewiring" and 90-day countdowns.<!--quoted:end--> I couldn't find good evidence for those claims, so Ballast doesn't make them, and its copy is tested so it can't drift into them.</p>
+<p>What it does: it uses skills from CBT and ACT, the two approaches most studied for this problem. That research looks promising and has real weaknesses. <a href="how-to-stop-watching-porn.html">Here's what supports what, and where it's thin</a>.</p>
 </div>
+<div>
+<p class="kicker">Private and secular</p>
+<h2>Nothing to sign up for</h2>
+<p>No account and no server. Your entries stay on your iPhone, and no browsing or app data leaves it. Apple and RevenueCat process purchases. <a href="privacy.html">The privacy policy</a> lists the rest.</p>
+<p>There's no religious framing. People of any faith or none are welcome, and if you want a faith-based app, <a href="best-apps-to-quit-porn-compared.html">the comparison names some</a>.</p>
+</div>
+</div>
+</section>
+
+<section class="wrap section" id="free-and-pro">
+<p class="kicker">What's free</p>
+<h2>Free and Pro, without the fine print</h2>
+<p class="lede">Nothing that helps in the moment costs anything. Pro is for the long haul, and you're never asked to buy during an urge or after a slip.</p>
+<div class="table-wrap"><table class="compare-table">
+<caption>What each tier includes in Ballast 1.1</caption>
+<thead><tr><th scope="col">Free, for good</th><th scope="col">Pro</th></tr></thead>
+<tbody>
+<tr><td>Whole urge flow, slip logging and after-slip support</td><td>Commitment lock: cool-off and trusted-person code</td></tr>
+<tr><td>Streak, clear days, route, check-ins, today's watch</td><td>App shields</td></tr>
+<tr><td>One-tap adult-website filter</td><td>Unlimited urge plans</td></tr>
+<tr><td>One urge plan, one habit</td><td>Insights and weekly review</td></tr>
+<tr><td>Course week one; all reading about urges and slips</td><td>Course weeks 2 to 4; the rest of the library</td></tr>
+<tr><td>Toolbox, friction checklist, getting help, partner card</td><td>Full history and calendar; unlimited habits</td></tr>
+<tr><td>App lock, export, backup and restore</td><td></td></tr>
+</tbody></table></div>
+<p>Pro comes as a monthly or yearly subscription or a single lifetime purchase. The App Store shows the price for your country. The offer appears after setup, can always be dismissed, and has no countdown or made-up discount. Apple handles billing, so you cancel in Settings like any other subscription.</p>
+</section>
+
+<section class="wrap section" id="limits">
+<p class="kicker">Honest limits</p>
+<h2>Where Ballast isn't the right fit</h2>
+<ul>
+<li><strong>It isn't treatment.</strong> It's a self-tracking and educational tool. If this is affecting your work, relationships or safety, <a href="support.html#more-help">a qualified person is worth more than an app</a>.</li>
+<li><strong>There's no community.</strong> No account and no server means no groups or forums. Plenty of people find other people are what helps most, and <a href="best-apps-to-quit-porn-compared.html#where-others-are-better">other apps do that better</a>.</li>
+<li><strong>It can't stop a determined phone owner.</strong> No App Store app can. The aim is a pause long enough to use it.</li>
+<li><strong>It's iPhone only,</strong> and needs iOS 26 or later.</li>
+</ul>
+</section>
+
+<section class="wrap section" id="guides">
+<p class="kicker">Useful without the app</p>
+<h2>Guides and a free tool</h2>
+<ul class="guides">
+<li><a href="if-then-urge-plan.html"><strong>Free if-then urge plan builder</strong><span>Write a plan for your triggers and print it. It runs in your browser and nothing leaves it.</span></a></li>
+<li><a href="how-to-stop-watching-porn.html"><strong>How to stop watching porn</strong><span>What research supports, where it's thin, and what to do this week.</span></a></li>
+<li><a href="block-porn-iphone-screen-time.html"><strong>Block porn on iPhone with Screen Time</strong><span>The free built-in steps, a passcode someone else keeps, and what the filter misses.</span></a></li>
+<li><a href="what-to-do-after-a-slip.html"><strong>What to do after a slip</strong><span>The next ten minutes, the next hour and tomorrow morning.</span></a></li>
+<li><a href="best-apps-to-quit-porn-compared.html"><strong>Apps to quit porn or PMO, compared</strong><span>Dated, with the conflict of interest at the top and where others are better.</span></a></li>
+<li><a href="quittr-left-the-app-store.html"><strong>QUITTR left the App Store</strong><span>What's verifiable, how to check your subscription, and how to keep your start date.</span></a></li>
+</ul>
+</section>
+
+<section class="wrap section" id="questions">
+<p class="kicker">Questions</p>
+<h2>Plain answers</h2>
+<!--faq:start-->
+<h3>Is Ballast free?</h3>
+<p>The whole urge flow, slip support, the adult-website filter, your streak and clear days, backup and restore are free for good. Pro adds the commitment lock, app shields, unlimited urge plans, insights, the rest of the course and library, and full history.</p>
+<h3>Does Ballast block websites?</h3>
+<p>Yes. One tap turns on the iOS adult-website filter through Apple's Family Controls. It adds friction, not a wall: a phone's owner can undo it in Settings, and no filter catches everything.</p>
+<h3>Does anything I write leave my phone?</h3>
+<p>No. There is no account and no server, and personal entries stay on your iPhone. Ballast never sees your browsing or which apps you pick to shield. Apple and RevenueCat process purchases.</p>
+<h3>Is Ballast treatment?</h3>
+<p>No. Ballast is a self-tracking and educational tool that uses skills from CBT and ACT. It does not diagnose anything and does not replace professional care.</p>
+<!--faq:end-->
+</section>
+
+<section class="wrap section closing">
+<aside class="facts"><h2 id="app-facts">App facts</h2><p>Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a one-tap iOS adult-website filter, if-then urge plans and progress that a slip cannot erase. The full urge flow, slip support and the filter are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.</p><p class="small">Made by <a href="about.html">Mohamed Elatabany</a>. Facts checked 4 November 2026.</p></aside>
+<h2>Have a plan before the next one.</h2>
+<p class="lede">Set it up on a calm afternoon. It's there at 1am.</p>
+<a class="store" href="https://apps.apple.com/app/apple-store/id6803731313?pt=127826363&amp;ct=ballast_index&amp;mt=8" aria-label="Download Ballast on the App Store"><img class="icon" src="assets/icon-112.png" alt="" width="56" height="56"><img class="badge" src="assets/app-store-badge.svg" alt="Download on the App Store" width="135" height="45"></a>
+</section></main>
+<footer class="site-foot"><div class="wrap foot-grid"><div><p class="foot-title">Guides and tools</p><ul class="plain"><li><a href="if-then-urge-plan.html">Free if-then urge plan builder</a></li><li><a href="how-to-stop-watching-porn.html">How to stop watching porn: what research supports</a></li><li><a href="block-porn-iphone-screen-time.html">How to block porn on iPhone with Screen Time</a></li><li><a href="what-to-do-after-a-slip.html">What to do after a slip</a></li><li><a href="best-apps-to-quit-porn-compared.html">Apps to quit porn or PMO, compared</a></li><li><a href="quittr-left-the-app-store.html">QUITTR left the App Store: what&#x27;s known and what to do</a></li></ul></div><div><p class="foot-title">Ballast</p><ul class="plain"><li><a href="index.html">Home</a></li><li><a href="about.html">About and method</a></li><li><a href="support.html">Support</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="support.html#more-help">Getting more help</a></li></ul></div><div class="foot-note"><p>Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a one-tap iOS adult-website filter, if-then urge plans and progress that a slip cannot erase. The full urge flow, slip support and the filter are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.</p><p>Made by <a href="about.html">Mohamed Elatabany</a>. This site sets no cookies and runs no analytics. <a href="mailto:atabany.apps@gmail.com">Send a correction</a>.</p><p class="small">Apple, the Apple logo, iPhone and App Store are trademarks of Apple Inc., registered in the U.S. and other countries.</p></div></div></footer>
 </body>
 </html>

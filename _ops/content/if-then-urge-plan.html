@@ -1,0 +1,63 @@
+<!--meta {"kind":"tool","order":10,"script":"urge-plan.js","campaign":"ballast-tool-urge-plan","topic":"If-then planning for urges","crumb":"If-then urge plan","title":"Free if-then urge plan builder: private and printable","h1":"Free if-then urge plan builder","linkText":"Free if-then urge plan builder","summary":"A private, printable tool that runs in the browser with nothing sent anywhere, plus a reference table of ten common triggers with starter plans.","description":"Write if-then plans for your urge triggers and print them. Runs only in your browser and nothing leaves it. Includes starter plans for ten common triggers.","published":"2026-11-04","updated":"2026-11-04","answer":"An if-then plan decides in advance what you'll do when a familiar situation shows up: \"If it's late and I'm in bed with my phone, the phone goes on the kitchen charger.\" Pick a trigger below, write your plan and print it. This page sends nothing anywhere."} -->
+<noscript><p class="note">The builder needs JavaScript. Everything else works without it: use the table below, and print this page to get a blank sheet.</p></noscript>
+
+<form class="tool" id="builder">
+<fieldset>
+<legend>1. What sets it off?</legend>
+<div class="chips" id="chips">{{chips}}</div>
+</fieldset>
+<div class="field"><label for="if-text">2. If…</label><input type="text" id="if-text" autocomplete="off" maxlength="160" placeholder="If it's late and I'm in bed with my phone,"></div>
+<div class="field"><label for="then-text">3. Then I will…</label><textarea id="then-text" autocomplete="off" maxlength="240" placeholder="Something physical and small: a place, an object, a first step."></textarea>
+<div class="starters" id="then-starters" aria-label="Starter ideas"></div></div>
+<div class="field"><label for="why-text">4. My reason (optional)</label><input type="text" id="why-text" autocomplete="off" maxlength="160" placeholder="In your own words"></div>
+<div class="actions"><button class="primary" type="submit">Add to my sheet</button></div>
+<label class="check"><input type="checkbox" id="remember"> Keep my plans in this browser (off by default; not on a shared device)</label>
+<p class="status" id="status" role="status"></p>
+</form>
+
+<section class="sheet" id="sheet" aria-labelledby="sheet-title">
+<h2 id="sheet-title">My urge plans</h2>
+<div id="cards">
+<div class="card-plan" data-blank><p class="if">If <span class="blank-line"></span></p><p class="then">then I will <span class="blank-line"></span></p><p class="why">Because <span class="blank-line"></span></p></div>
+</div>
+<div class="actions no-print"><button type="button" id="print-btn">Print</button><button type="button" id="copy-btn" hidden>Copy as text</button><button type="button" id="clear-btn" hidden>Clear</button></div>
+</section>
+
+<p class="note"><strong>Nothing leaves your browser.</strong> There are no accounts and no analytics. This page's security policy blocks network requests from its script, and you can check it yourself in the page source. Unless you tick the box, your plans are gone when you close the tab.</p>
+
+<h2 id="write-a-good-one">How to write one that holds up</h2>
+<ul>
+<li><strong>Name the moment you can actually notice.</strong> "When I'm in bed and reach for my phone" beats "when it gets hard".</li>
+<li><strong>Make the "then" physical.</strong> A place, an object, a first step. "Phone on the kitchen charger" works at 1am. "Be stronger" doesn't.</li>
+<li><strong>Keep it small enough to happen.</strong> If it takes planning to carry out, it's too big.</li>
+<li><strong>Write it on a calm day,</strong> and change it whenever you learn something. A plan that didn't hold has told you something useful.</li>
+<li><strong>Start with one or two.</strong> Your most common situation matters most.</li>
+</ul>
+
+<h2 id="reference">Starter plans by trigger</h2>
+<p>These are starting points to edit, adapted from the plans in the Ballast app. A plan tends to work better when it's yours.</p>
+{{plan_table}}
+
+<h2 id="evidence">Does this actually help?</h2>
+<p>If-then plans are also called implementation intentions. A <a href="https://kops.uni-konstanz.de/entities/publication/2e749bfb-8533-437c-8203-7e788c910c5f">2006 meta-analysis by Gollwitzer and Sheeran</a> found a medium-to-large effect (d≈0.65) on reaching goals of many kinds. <strong>They haven't been tested on pornography specifically</strong>, so this is a reasonable bet, not an established treatment. <a href="how-to-stop-watching-porn.html">The full evidence summary</a> covers what's been tested directly.</p>
+<p>The plan is for the urge. For what comes after, see <a href="what-to-do-after-a-slip.html">what to do after a slip</a>, and for the setup around it, <a href="block-porn-iphone-screen-time.html">the free Screen Time filter steps</a>.</p>
+
+{{slot|ballast-plan-tab-my-urge-plans-iphone|dawn|Ballast's Plan tab showing a list of the user's own urge plans by trigger.}}
+{{cta|Have your plan in your hand when it hits.|Ballast shows your own if-then plan and reason the moment you tap what's happening. One plan and the whole urge flow are free. It is not treatment.}}
+
+{{help}}
+
+<h2 id="questions">Questions</h2>
+<!--faq:start-->
+<h3>Is this tool private?</h3>
+<p>Yes. It runs entirely in your browser. There is no account or analytics, and the page's security policy blocks network requests. Plans are only kept if you tick the box, and then only in this browser.</p>
+<h3>What is an if-then plan?</h3>
+<p>A decision made in advance, in the form "if this situation happens, then I will do this specific thing". Psychologists call it an implementation intention. It means you don't have to decide in the moment.</p>
+<h3>How many plans should I write?</h3>
+<p>Start with one or two for your most common situations. A short list you remember does more than a long list you don't.</p>
+<!--faq:end-->
+
+<h2 id="sources">Sources</h2>
+<ol class="sources">
+<li>Gollwitzer PM, Sheeran P. <a href="https://kops.uni-konstanz.de/entities/publication/2e749bfb-8533-437c-8203-7e788c910c5f">Implementation intentions and goal achievement: a meta-analysis of effects and processes</a>. Adv Exp Soc Psychol, 2006.</li>
+</ol>

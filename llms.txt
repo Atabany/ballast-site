@@ -1,17 +1,26 @@
 # Ballast: Quit PMO
 
-> Official app website by Mohamed Elatabany.
+> Your plan for the next urge. Private. Secular. No brain myths. Official website by Mohamed Elatabany.
 
-Ballast is an on-device self-tracking and educational app for adults quitting PMO, for iPhone with iOS 26 or later. The full urge flow and slip support are free. No Ballast account is required. Personal entries stay on device; Apple and RevenueCat process purchases. It is not treatment.
+Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a one-tap iOS adult-website filter, if-then urge plans and progress that a slip cannot erase. The full urge flow, slip support and the filter are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.
 
-Canonical App Store listing: https://apps.apple.com/app/id6803731313
+App Store listing: https://apps.apple.com/app/id6803731313
+Facts checked: 4 November 2026
 
-- [Ballast: Quit PMO — Private Urge Support](https://atabany.github.io/ballast-site/)
+## Pages
+
+- [Ballast: Quit PMO. Your plan for the next urge](https://atabany.github.io/ballast-site/)
+- [About Ballast, its author and how these pages are written](https://atabany.github.io/ballast-site/about.html)
 - [Ballast Support and Contact](https://atabany.github.io/ballast-site/support.html)
 - [Ballast Privacy Policy](https://atabany.github.io/ballast-site/privacy.html)
 
-## Guides
+## Guides and tools
 
+- [Free if-then urge plan builder](https://atabany.github.io/ballast-site/if-then-urge-plan.html)
+- [How to stop watching porn: what research supports](https://atabany.github.io/ballast-site/how-to-stop-watching-porn.html)
 - [How to block porn on iPhone with Screen Time](https://atabany.github.io/ballast-site/block-porn-iphone-screen-time.html)
+- [What to do after a slip](https://atabany.github.io/ballast-site/what-to-do-after-a-slip.html)
+- [Apps to quit porn or PMO, compared](https://atabany.github.io/ballast-site/best-apps-to-quit-porn-compared.html)
+- [QUITTR left the App Store: what's known and what to do](https://atabany.github.io/ballast-site/quittr-left-the-app-store.html)
 
-This reference file is supplementary navigation; it does not establish search ranking or AI recommendations.
+This file is a plain reference for readers and assistants. It does not establish search ranking or AI recommendations.

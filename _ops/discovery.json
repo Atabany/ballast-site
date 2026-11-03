@@ -1,26 +1,16 @@
 {
-  "base": "https://atabany.github.io/ballast-site/",
+  "SITE_URL": "https://atabany.github.io/ballast-site/",
   "appId": "6803731313",
+  "providerToken": "127826363",
   "shortName": "Ballast",
   "storeName": "Ballast: Quit PMO",
-  "title": "Ballast: Quit PMO — Private Urge Support",
-  "description": "Private urge support, streak tracking and daily steps on iPhone. The full urge flow is free. No Ballast account required.",
-  "category": "LifestyleApplication",
-  "campaignPrefix": "ballast",
-  "facts": "Ballast is an on-device self-tracking and educational app for adults quitting PMO, for iPhone with iOS 26 or later. The full urge flow and slip support are free. No Ballast account is required. Personal entries stay on device; Apple and RevenueCat process purchases. It is not treatment.",
-  "version": "1.0.1",
+  "category": "HealthApplication",
+  "version": "1.1.0",
   "minimumOS": "26.0",
-  "listingChecked": "4 November 2026",
-  "homeUpdated": "2026-11-04",
-  "guides": [
-    {
-      "file": "block-porn-iphone-screen-time.html",
-      "title": "How to block porn on iPhone with Screen Time, and its limits",
-      "linkText": "How to block porn on iPhone with Screen Time",
-      "summary": "The built-in iOS 26 Settings path for Limit Adult Websites, a passcode someone else keeps, what the filter misses, a seven-part setup checklist and a plan for urges.",
-      "campaign": "ballast-guide-block-porn",
-      "updated": "2026-11-04",
-      "faq": true
-    }
-  ]
+  "author": "Mohamed Elatabany",
+  "authorUrl": "https://github.com/Atabany",
+  "contact": "atabany.apps@gmail.com",
+  "promise": "Your plan for the next urge. Private. Secular. No brain myths.",
+  "facts": "Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a one-tap iOS adult-website filter, if-then urge plans and progress that a slip cannot erase. The full urge flow, slip support and the filter are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.",
+  "factsChecked": "4 November 2026"
 }
