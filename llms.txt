@@ -10,4 +10,8 @@ Canonical App Store listing: https://apps.apple.com/app/id6803731313
 - [Ballast Support and Contact](https://atabany.github.io/ballast-site/support.html)
 - [Ballast Privacy Policy](https://atabany.github.io/ballast-site/privacy.html)
 
+## Guides
+
+- [How to block porn on iPhone with Screen Time](https://atabany.github.io/ballast-site/block-porn-iphone-screen-time.html)
+
 This reference file is supplementary navigation; it does not establish search ranking or AI recommendations.

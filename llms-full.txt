@@ -10,4 +10,8 @@ Canonical App Store listing: https://apps.apple.com/app/id6803731313
 - [Ballast Support and Contact](https://atabany.github.io/ballast-site/support.html)
 - [Ballast Privacy Policy](https://atabany.github.io/ballast-site/privacy.html)
 
+## Guides
+
+- [How to block porn on iPhone with Screen Time](https://atabany.github.io/ballast-site/block-porn-iphone-screen-time.html): The built-in iOS 26 Settings path for Limit Adult Websites, a passcode someone else keeps, what the filter misses, a seven-part setup checklist and a plan for urges. Updated 2026-11-04.
+
 This reference file is supplementary navigation; it does not establish search ranking or AI recommendations.

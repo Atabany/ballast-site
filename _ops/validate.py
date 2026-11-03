@@ -12,6 +12,10 @@ errors = []
 class Page(HTMLParser):
     def __init__(self):
         super().__init__()
+        self.text = []
+        self.h3 = []
+        self.in_h3 = False
+        self.in_body = False
         self.title = ''
         self.in_title = False
         self.in_json = False
@@ -32,6 +36,11 @@ class Page(HTMLParser):
             self.ids.add(a['id'])
         if tag == 'title':
             self.in_title = True
+        if tag == 'body':
+            self.in_body = True
+        if tag == 'h3':
+            self.in_h3 = True
+            self.h3.append('')
         if tag == 'h1':
             self.h1 += 1
         if tag == 'meta':
@@ -51,6 +60,8 @@ class Page(HTMLParser):
     def handle_endtag(self, tag):
         if tag == 'title':
             self.in_title = False
+        if tag == 'h3':
+            self.in_h3 = False
         if tag == 'script' and self.in_json:
             try:
                 data = json.loads(self.buffer)
@@ -64,6 +75,10 @@ class Page(HTMLParser):
             self.title += value
         if self.in_json:
             self.buffer += value
+        elif self.in_body:
+            self.text.append(value)
+        if self.in_h3:
+            self.h3[-1] += value
 
 pages = {}
 for path in ROOT.glob('*.html'):
@@ -114,7 +129,41 @@ if not app or app.get('downloadUrl') != 'https://apps.apple.com/app/id' + str(C[
     errors.append('Missing or incorrect application entity')
 if 'listing is being prepared' in (ROOT / 'index.html').read_text():
     errors.append('Outdated launch status')
+# Guides: hand-written pages listed in discovery.json and re-linked by enrich.py.
+guides = C.get('guides', [])
+if len({g['campaign'] for g in guides}) != len(guides):
+    errors.append('Guide campaign tags must be unique')
+norm = lambda x: ' '.join(x.split())
+for g in guides:
+    name = g['file']
+    def require(ok, message):
+        if not ok:
+            errors.append(name + ': ' + message)
+    p = pages.get(name)
+    if not p:
+        errors.append('Missing guide page: ' + name)
+        continue
+    require(p.title == g['title'], 'title differs from discovery.json')
+    require(0 < len(g['campaign']) <= 30, 'campaign tag must be 1-30 characters')
+    tags = [parse_qs(urlsplit(u).query).get('ct', [''])[0] for u in p.links if urlsplit(u).hostname == 'apps.apple.com']
+    require(tags and set(tags) == {g['campaign']}, 'App Store links must all use ct=' + g['campaign'])
+    require('assets/app-icon.png' in p.links and 'assets/app-store-badge.svg' in p.links, 'CTA needs app icon and App Store badge')
+    types = {x.get('@type') for x in p.schema}
+    require({'Article', 'BreadcrumbList'} <= types, 'needs Article and BreadcrumbList JSON-LD')
+    article = next((x for x in p.schema if x.get('@type') == 'Article'), {})
+    require(article.get('dateModified') == g['updated'], 'Article dateModified differs from discovery.json')
+    text = norm(''.join(p.text))
+    require('Updated ' in text and 'support.html' in p.links, 'needs a visible updated date and support/correction link')
+    faq = next((x for x in p.schema if x.get('@type') == 'FAQPage'), None)
+    require(bool(faq) == bool(g.get('faq')), 'FAQPage presence differs from discovery.json')
+    for q in (faq or {}).get('mainEntity', []):
+        require(norm(q['name']) in [norm(h) for h in p.h3], 'FAQ question not visible: ' + q['name'])
+        require(norm(q['acceptedAnswer']['text']) in text, 'FAQ answer not visible: ' + q['name'])
+    for host in ['index.html', 'support.html']:
+        require(name in pages[host].links, 'not linked from ' + host)
+    for ref in ['llms.txt', 'llms-full.txt']:
+        require(C['base'] + name in (ROOT / ref).read_text(), 'missing from ' + ref)
 if errors:
     print('\n'.join(errors))
     raise SystemExit(1)
-print('OK — ' + C['shortName'] + ': metadata, local assets, links, schema, sitemap and App Store campaigns')
+print('OK — ' + C['shortName'] + ': ' + str(len(pages)) + ' pages, ' + str(len(guides)) + ' guide(s): metadata, local assets, links, schema, FAQ text, sitemap, llms and App Store campaigns')

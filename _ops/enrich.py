@@ -2,6 +2,10 @@
 
 Re-run after the app's policy generator. No network requests; product facts live in
 _ops/discovery.json. Privacy/support body text is preserved.
+
+Guides (discovery.json "guides") are hand-written pages in this repo. The app's generator
+(tools/build_site.py) never writes them; this script re-applies their campaign tag and
+re-adds their links to the homepage, support page, sitemap and llms files after a rebuild.
 """
 from pathlib import Path
 import html
@@ -14,6 +18,7 @@ C = json.loads((ROOT / '_ops/discovery.json').read_text())
 BASE = C['base']
 APP = str(C['appId'])
 E = html.escape
+GUIDES = C.get('guides', [])
 PAGES = {
     'index.html': (C['title'], C['description']),
     'support.html': (C['shortName'] + ' Support and Contact', 'Get help with ' + C['shortName'] + ', contact the developer and find purchase and app support information.'),
@@ -28,6 +33,10 @@ STYLE = '''.discovery-download { display:flex; flex-wrap:wrap; align-items:cente
 '''
 (ROOT / 'assets').mkdir(exist_ok=True)
 (ROOT / 'assets/discovery.css').write_text(STYLE)
+
+def guide_links():
+    return ''.join(f'<p><a href="{E(g["file"], quote=True)}">{E(g["linkText"])}</a> — {E(g["summary"])}</p>' for g in GUIDES)
+
 
 def cta(tag, header=False):
     url = f'https://apps.apple.com/app/apple-store/id{APP}?pt=127826363&ct={tag}&mt=8'
@@ -64,7 +73,7 @@ for name, (title, description) in PAGES.items():
             s = s.replace('</header>', header_cta + '</header>', 1)
     if name == 'index.html':
         s = re.sub(r'<p class="muted">DoseJot’s App Store listing is being prepared\..*?</p>', '', s)
-        facts = '<aside class="discovery-facts"><h2>App facts</h2><p>' + E(C['facts']) + '</p><p>Made by <a href="https://github.com/Atabany">Mohamed Elatabany</a>. App Store listing checked 18 October 2026.</p></aside>'
+        facts = '<aside class="discovery-facts"><h2>App facts</h2><p>' + E(C['facts']) + '</p><p>Made by <a href="https://github.com/Atabany">Mohamed Elatabany</a>. App Store listing checked ' + E(C.get('listingChecked', '18 October 2026')) + '.</p></aside>'
         hero_cta = '' if 'class="store-link"' in s.split('</header>', 1)[-1] else cta(tag)
         s = s.replace('</h1>', '</h1><!-- discovery-hero:start -->' + hero_cta + '<!-- discovery-hero:end -->', 1)
         fact_block = '<!-- discovery-facts:start -->' + facts + '<!-- discovery-facts:end -->'
@@ -75,7 +84,23 @@ for name, (title, description) in PAGES.items():
         else:
             at = s.rfind('<nav>')
             s = s[:at] + fact_block + s[at:]
+        if GUIDES:
+            block = '<!-- discovery-guides:start --><div class="card"><h2>Guides</h2>' + guide_links() + '</div><!-- discovery-guides:end -->'
+            m = re.search(r'<div class="card">\s*<h2>Pages</h2>', s)
+            s = s[:m.start()] + block + s[m.start():] if m else s.replace('<!-- discovery-facts:start -->', block + '<!-- discovery-facts:start -->', 1)
+    if name == 'support.html' and GUIDES:
+        block = '<!-- discovery-guides:start --><h2>Guides</h2>' + guide_links() + '<!-- discovery-guides:end -->'
+        anchor = '<h2>If you need more than an app</h2>'
+        s = s.replace(anchor, block + anchor, 1) if anchor in s else s.replace('<nav>', block + '<nav>', 1)
     s = s.replace('alt="Download on the App Store" height="44">', 'alt="Download on the App Store" width="132" height="44">')
+    p.write_text(s)
+
+# Guides: keep each page's App Store links on its own campaign tag.
+for g in GUIDES:
+    assert len(g['campaign']) <= 30, g['campaign']
+    p = ROOT / g['file']
+    s = p.read_text()
+    s = re.sub(r'(apps\.apple\.com/app/apple-store/id' + APP + r'\?pt=127826363&(?:amp;)?ct=)[^&"]+', lambda m: m.group(1) + g['campaign'], s)
     p.write_text(s)
 
 ns = 'http://www.sitemaps.org/schemas/sitemap/0.9'
@@ -85,11 +110,18 @@ for name in PAGES:
     node = ET.SubElement(sitemap, '{' + ns + '}url')
     ET.SubElement(node, '{' + ns + '}loc').text = BASE + ('' if name == 'index.html' else name)
     if name == 'index.html':
-        ET.SubElement(node, '{' + ns + '}lastmod').text = '2026-10-18'
+        ET.SubElement(node, '{' + ns + '}lastmod').text = C.get('homeUpdated', '2026-10-18')
+for g in GUIDES:
+    node = ET.SubElement(sitemap, '{' + ns + '}url')
+    ET.SubElement(node, '{' + ns + '}loc').text = BASE + g['file']
+    ET.SubElement(node, '{' + ns + '}lastmod').text = g['updated']
 ET.indent(sitemap, space='  ')
 ET.ElementTree(sitemap).write(ROOT / 'sitemap.xml', encoding='utf-8', xml_declaration=True)
 (ROOT / 'robots.txt').write_text('# Project sites use the host-root robots.txt policy. This file documents the intended policy.\nUser-agent: *\nAllow: /\nSitemap: ' + BASE + 'sitemap.xml\n')
-summary = '# ' + C['storeName'] + '\n\n> Official app website by Mohamed Elatabany.\n\n' + C['facts'] + '\n\nCanonical App Store listing: https://apps.apple.com/app/id' + APP + '\n\n' + '\n'.join('- [' + title + '](' + BASE + ('' if name == 'index.html' else name) + ')' for name, (title, _) in PAGES.items()) + '\n\nThis reference file is supplementary navigation; it does not establish search ranking or AI recommendations.\n'
-(ROOT / 'llms.txt').write_text(summary)
-(ROOT / 'llms-full.txt').write_text(summary)
+head = '# ' + C['storeName'] + '\n\n> Official app website by Mohamed Elatabany.\n\n' + C['facts'] + '\n\nCanonical App Store listing: https://apps.apple.com/app/id' + APP + '\n\n' + '\n'.join('- [' + title + '](' + BASE + ('' if name == 'index.html' else name) + ')' for name, (title, _) in PAGES.items()) + '\n'
+guides_short = ('\n## Guides\n\n' + '\n'.join('- [' + g['linkText'] + '](' + BASE + g['file'] + ')' for g in GUIDES) + '\n') if GUIDES else ''
+guides_full = ('\n## Guides\n\n' + '\n'.join('- [' + g['linkText'] + '](' + BASE + g['file'] + '): ' + g['summary'] + ' Updated ' + g['updated'] + '.' for g in GUIDES) + '\n') if GUIDES else ''
+tail = '\nThis reference file is supplementary navigation; it does not establish search ranking or AI recommendations.\n'
+(ROOT / 'llms.txt').write_text(head + guides_short + tail)
+(ROOT / 'llms-full.txt').write_text(head + guides_full + tail)
 print('Added verified metadata, install links, product facts and discovery files for ' + C['shortName'])
