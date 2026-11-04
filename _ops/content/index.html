@@ -7,7 +7,11 @@
 {{store}}
 <p class="hero-meta">iPhone, iOS 26 or later · No account · The whole urge flow is free, for good</p>
 </div>
-<div class="hero-scene">{{hero_scene}}</div>
+<div class="hero-scene">
+<video id="hero-video" class="hero-video" width="1600" height="640" poster="assets/ballast-horizon-hero-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1" data-src="assets/ballast-horizon-hero-loop.mp4"></video>
+<button id="hero-toggle" class="hero-toggle" type="button" hidden>Pause</button>
+<script src="assets/hero-video.js"></script>
+</div>
 </section>
 
 <section class="wrap section" id="what-it-does">
@@ -122,7 +126,7 @@
 <h3>Does Ballast block websites?</h3>
 <p>Yes. One tap turns on the iOS adult-website filter through Apple's Family Controls. It adds friction, not a wall: a phone's owner can undo it in Settings, and no filter catches everything.</p>
 <h3>Does anything I write leave my phone?</h3>
-<p>No. There is no account and no server, and personal entries stay on your iPhone. Ballast never sees your browsing or which apps you pick to shield. Apple and RevenueCat process purchases.</p>
+<p>Ballast sends none of it anywhere. There is no account and no server, and personal entries stay on your iPhone, though an iCloud or computer backup of the phone can include them. Ballast never sees your browsing or which apps you pick to shield. Apple and RevenueCat process purchases.</p>
 <h3>Is Ballast treatment?</h3>
 <p>No. Ballast is a self-tracking and educational tool that uses skills from CBT and ACT. It does not diagnose anything and does not replace professional care.</p>
 <!--faq:end-->

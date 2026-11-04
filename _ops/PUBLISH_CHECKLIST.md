@@ -15,8 +15,9 @@ Voyage.
 - [ ] Every entry in **"Claims that wait for the App Store update"** below is true of the shipped build.
 - [ ] Rating count re-read from that command. If there are ratings: the comparison's "No ratings yet" and the about page's and `llms-product.md`'s lines must change. The site still shows no stars; add a rating with its count only as the checklist describes, and only if real.
 - [ ] `QUITTR_RECHECK.md` completed on the day. If it can't be, delete that page's source and links for now and publish the rest.
-- [ ] `SCREENSHOTS_NEEDED.md` slots filled with real captures, or accept the abstract panels for launch.
-- [ ] Privacy policy source in the app repo matches: `docs/PRIVACY_POLICY.md` in `quitPorn-next` still lacks the Shield section. Copy the same wording there so app, tests and site agree. `LegalTests` scans that file.
+- [ ] **`assets/screens/ballast-shield-filter-and-commitment-lock-iphone.jpg` is mock output.** Reshoot from a real device before publishing, or replace with the abstract panel by deleting the file and rebuilding. The shipped Shield screen must match whatever stays in that slot.
+- [ ] Every other `SCREENSHOTS_NEEDED.md` slot still matches the shipped build.
+- [ ] Privacy policy source in the app repo still matches this site's `privacy.html` (`docs/PRIVACY_POLICY.md` and `Services/Legal.swift` in `quitPorn-next`).
 - [ ] **Retire `tools/build_site.py` in the app repo.** It overwrites `index.html`, `privacy.html`, `support.html`, `robots.txt`, `sitemap.xml` and `llms.txt`, and its old copy would undo this site. Site source is now `_ops/content/` here.
 - [ ] Update `docs/kb/website.md` in the app repo: its guide note says Ballast has no filter, and that the generator owns these files.
 - [ ] Copy read by you, especially `about.html` (it says you're not a clinician, no clinician reviewed the site, and that AI tools help with research, drafting and building) and the first-person statements on the comparison and QUITTR pages. They're written in your voice. Edit anything you wouldn't sign.
@@ -91,6 +92,7 @@ All of these are true of the spec in `docs/REBUILD.md`, not of the live 1.0.1. N
 | A finished wait opens a 15-minute window | Support | `ShieldPolicy.releaseWindow` |
 | After-slip "next hour" support and the day-after card; no offers at that moment | Slip page | Log a slip |
 | Setup asks how long since the last time | QUITTR page | Onboarding |
+| Privacy page: RevenueCat asked at each launch and foreground; export leaves out plans, course answers, steps, reviews and the picture | Privacy, support, llms | `Store.refresh`, `DataExport`, same wording as `docs/PRIVACY_POLICY.md` |
 | `softwareVersion` 1.1.0 | JSON-LD, `discovery.json` | Set to the live version |
 
 **Could go live before the update**, if you wanted, after removing or rewording their Ballast sections and calls to action: `how-to-stop-watching-porn.html`, `if-then-urge-plan.html`, `what-to-do-after-a-slip.html`, the QUITTR page. The current guide's statement that Ballast has no filter stays true until 1.1 ships, so `block-porn-iphone-screen-time.html` should only change with the release.

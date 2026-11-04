@@ -49,6 +49,7 @@ class Page(HTMLParser):
         self.title = self.buffer = ''
         self.ids, self.meta, self.canonical, self.h1, self.lang = set(), {}, [], 0, None
         self.frames = 0
+        self.videos = []
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -67,7 +68,9 @@ class Page(HTMLParser):
             self.h3.append('')
         if tag == 'h1':
             self.h1 += 1
-        if tag in ('iframe', 'embed', 'object', 'video', 'audio'):
+        if tag == 'video':
+            self.videos.append(a)
+        if tag in ('iframe', 'embed', 'object', 'audio'):
             self.frames += 1
         if tag == 'meta':
             key = a.get('name', a.get('property', a.get('http-equiv', '')))
@@ -85,7 +88,7 @@ class Page(HTMLParser):
                 self.scripts.append(a.get('src', 'INLINE'))
         if tag == 'img':
             self.images.append(a)
-        for key in ['href', 'src', 'poster']:
+        for key in ['href', 'src', 'poster', 'data-src']:
             if a.get(key):
                 self.links.append(a[key])
 
@@ -214,6 +217,10 @@ for name, p in pages.items():
     require(bool(og_file and og_file.exists() and png_size(og_file) == (1200, 630)), 'OG image must exist at 1200x630 (run build.py --og)')
     require(p.meta.get('twitter:card') == ['summary_large_image'], 'needs large Twitter card')
     require(p.frames == 0, 'no embedded frames or media')
+    require(not p.videos or name == 'index.html', 'video only in the home hero')
+    for v in p.videos:
+        require(all(x in v for x in ['autoplay', 'muted', 'loop', 'playsinline', 'poster', 'width', 'height']), 'hero video needs autoplay muted loop playsinline poster width height')
+        require('hero-toggle' in raw and 'hero-video.js' in raw, 'hero video needs its pause control')
     require(len(raw.encode()) < 110_000, 'HTML over 110 KB')
     if kind == '404':
         require(p.meta.get('robots') == ['noindex'] and not p.canonical and not p.schema, '404 must be noindex with no canonical or schema')

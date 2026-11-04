@@ -21,7 +21,7 @@ Free: whole urge flow, slip logging and after-slip support; streak, clear days, 
 
 Pro: commitment lock; app shields; unlimited urge plans; insights and weekly review; course weeks 2 to 4 and the rest of the library; full history and calendar; unlimited habits. Sold as monthly, yearly or lifetime. Prices are shown in the App Store.
 
-Privacy: no account and no server. Personal entries stay on the device. No browsing or app data leaves the phone; Apple's picker hides app choices from Ballast. Apple and RevenueCat process purchases. No analytics or advertising SDKs.
+Privacy: no account and no server. Personal entries stay on the device, though Apple's iCloud or computer backups of the phone can include app data. Ballast asks RevenueCat whether the user has Pro at each launch and foreground. No browsing or app data leaves the phone; Apple's picker hides app choices from Ballast. Apple and RevenueCat process purchases. No analytics or advertising SDKs.
 
 Limits: it is not treatment and does not diagnose. It has no community or groups. It cannot stop a determined device owner. There is no outcome data for the app and no App Store ratings yet. It makes no claims about dopamine, rewiring or fixed timelines; it uses skills from CBT and ACT, and research on those is promising with a high risk of bias.
 

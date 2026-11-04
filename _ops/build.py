@@ -12,7 +12,7 @@ root is hand-edited. Standard library only, except --og (Chrome).
 from datetime import date
 from pathlib import Path
 from urllib.parse import urlsplit
-import argparse, hashlib, html, json, re, subprocess, sys, tempfile
+import argparse, base64, hashlib, html, json, re, subprocess, sys, tempfile
 
 OPS = Path(__file__).resolve().parent
 ROOT = OPS.parent
@@ -137,7 +137,6 @@ def expand(body, page):
     body = re.sub(r'\{\{store\}\}', lambda _: store_link(tag), body)
     body = re.sub(r'\{\{cta\|(.*?)\|(.*?)\}\}', lambda m: f'<aside class="cta"><h2 class="cta-title">{m[1]}</h2><p>{m[2]}</p>{store_link(tag)}</aside>', body, flags=re.S)
     body = re.sub(r'\{\{slot\|(.*?)\|(.*?)\|(.*?)\}\}', lambda m: slot(m[1], m[2], m[3]), body)
-    body = body.replace('{{hero_scene}}', horizon.scene(1600, 560, 'dawn', horizon=0.40, sun_x=0.72, layered=True))
     return body.strip()
 
 
@@ -293,16 +292,20 @@ def write_art(out):
 def make_og(pages, out):
     target = out / 'assets/og'
     target.mkdir(parents=True, exist_ok=True)
-    css = 'html,body{margin:0;background:#120E17}.w{position:relative;width:1200px;height:630px;overflow:hidden}svg{position:absolute;left:0;bottom:0}.t{position:absolute;left:72px;right:72px;top:64px;color:#F6EFE9;font:500 66px/1.1 "New York","Iowan Old Style",Georgia,serif;letter-spacing:-.01em}.b{position:absolute;left:72px;bottom:46px;color:#F6EFE9;font:600 28px -apple-system,sans-serif;letter-spacing:.02em}'
+    css = 'html,body{margin:0;background:#120E17}.w{position:relative;width:1200px;height:630px;overflow:hidden}svg{position:absolute;left:0;bottom:0}.t{position:absolute;left:72px;right:72px;top:64px;color:#F6EFE9;font:500 66px/1.1 "New York","Iowan Old Style",Georgia,serif;letter-spacing:-.01em}.b{position:absolute;left:72px;bottom:46px;color:#F6EFE9;font:600 28px -apple-system,sans-serif;letter-spacing:.02em;display:flex;align-items:center;gap:14px}.b img{width:56px;height:56px;border-radius:13px}'
+    icon = 'data:image/png;base64,' + base64.b64encode((ROOT / 'assets/icon-112.png').read_bytes()).decode()
     with tempfile.TemporaryDirectory() as tmp:
         for p in pages:
             stem = Path(p['file']).stem
             title = p.get('og_title', plain(p['h1']))
-            doc = f'<!doctype html><meta charset="utf-8"><style>{css}</style><div class="w">{horizon.scene(1200, 630, "dawn", horizon=0.62, sun_x=0.78, inner_only=False).replace("<svg", "<svg ", 1)}<div class="t">{E(title)}</div><div class="b">Ballast</div></div>'
+            doc = f'<!doctype html><meta charset="utf-8"><style>{css}</style><div class="w">{horizon.scene(1200, 630, "dawn", horizon=0.62, sun_x=0.78, inner_only=False).replace("<svg", "<svg ", 1)}<div class="t">{E(title)}</div><div class="b"><img src="{icon}" alt="">Ballast</div></div>'
             f = Path(tmp) / f'{stem}.html'
             f.write_text(doc)
             png = target / f'{stem}.png'
-            subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--hide-scrollbars', f'--user-data-dir={tmp}/profile', '--window-size=1200,630', '--force-device-scale-factor=1', f'--screenshot={png}', f.as_uri()], check=True, capture_output=True)
+            # Chrome can write the file and still exit non-zero in teardown, so the file is the test.
+            png.unlink(missing_ok=True)
+            subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--hide-scrollbars', f'--user-data-dir={tmp}/profile', '--window-size=1200,630', '--force-device-scale-factor=1', f'--screenshot={png}', f.as_uri()], capture_output=True, timeout=120)
+            assert png.exists(), f'Chrome wrote no image for {stem}'
             try:
                 from PIL import Image
                 im = Image.open(png).convert('RGB')
