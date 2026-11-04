@@ -1,8 +1,8 @@
 # Moving from github.io to Ballast's own domain
 
-No domain has been bought. Candidates and evidence are in the app repo's
-`docs/RESEARCH_2026-11.md`; `urgeplan.com` had no RDAP record on 2026-11-04, which isn't proof of
-availability, price or trademark clearance. The owner decides.
+**`quitpmo.com` was registered on 2026-11-04** at Cloudflare by the owner (1 year, auto-renew on, Cloudflare nameservers). `SITE_URL` and `CNAME` on this branch already point at it. **No DNS records exist yet, and nothing is connected:** connecting waits for the owner's go-ahead, per `PUBLISH_CHECKLIST.md`.
+
+DNS records for GitHub Pages at publish time, all **DNS only** (grey cloud, no proxy): `A @` to 185.199.108.153, 185.199.109.153, 185.199.110.153 and 185.199.111.153; `AAAA @` to 2606:50c0:8000::153, 2606:50c0:8001::153, 2606:50c0:8002::153 and 2606:50c0:8003::153; `CNAME www` to atabany.github.io. Verify these against GitHub's current docs on the day. Then set the custom domain in the Pages settings, enforce HTTPS, and test redirects.
 
 ## The one-line rebuild
 

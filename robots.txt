@@ -42,4 +42,4 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://atabany.github.io/ballast-site/sitemap.xml
+Sitemap: https://quitpmo.com/sitemap.xml

@@ -29,18 +29,18 @@ Who it may not suit: people who want a community, a faith-based program, reports
 
 ## Pages
 
-- [Ballast: Quit PMO. Your plan for the next urge](https://atabany.github.io/ballast-site/)
-- [About Ballast, its author and how these pages are written](https://atabany.github.io/ballast-site/about.html)
-- [Ballast Support and Contact](https://atabany.github.io/ballast-site/support.html)
-- [Ballast Privacy Policy](https://atabany.github.io/ballast-site/privacy.html)
+- [Ballast: Quit PMO. Your plan for the next urge](https://quitpmo.com/)
+- [About Ballast, its author and how these pages are written](https://quitpmo.com/about.html)
+- [Ballast Support and Contact](https://quitpmo.com/support.html)
+- [Ballast Privacy Policy](https://quitpmo.com/privacy.html)
 
 ## Guides and tools
 
-- [Free if-then urge plan builder](https://atabany.github.io/ballast-site/if-then-urge-plan.html): A private, printable tool that runs in the browser with nothing sent anywhere, plus a reference table of ten common triggers with starter plans. Updated 2026-11-04.
-- [How to stop watching porn: what research supports](https://atabany.github.io/ballast-site/how-to-stop-watching-porn.html): An evidence review in plain language: CBT and ACT therapy, if-then plans, urge surfing, blockers and abstinence claims, each with its size and its weakness, plus a practical week. Updated 2026-11-04.
-- [How to block porn on iPhone with Screen Time](https://atabany.github.io/ballast-site/block-porn-iphone-screen-time.html): The built-in iOS 26 Settings path for Limit Adult Websites, a passcode someone else keeps, what the filter misses, a seven-part setup checklist and where Ballast's own filter fits. Updated 2026-11-04.
-- [What to do after a slip](https://atabany.github.io/ballast-site/what-to-do-after-a-slip.html): A matter-of-fact plan for the next ten minutes, the next hour and tomorrow morning: get out of the situation, record what happened, adjust the plan, and when to ask for more help. Updated 2026-11-04.
-- [Apps to quit porn or PMO, compared](https://atabany.github.io/ballast-site/best-apps-to-quit-porn-compared.html): A dated comparison of ten App Store apps by US ratings, pricing structure and review themes, with the author's conflict of interest at the top and a section on where competitors are better than Ballast. Updated 2026-11-04.
-- [QUITTR left the App Store: what's known and what to do](https://atabany.github.io/ballast-site/quittr-left-the-app-store.html): A dated account of what can be verified about QUITTR's missing listing, with the cause stated as unknown, plus how to cancel a subscription through Apple, keep your start date and choose what's next. Updated 2026-11-04.
+- [Free if-then urge plan builder](https://quitpmo.com/if-then-urge-plan.html): A private, printable tool that runs in the browser with nothing sent anywhere, plus a reference table of ten common triggers with starter plans. Updated 2026-11-04.
+- [How to stop watching porn: what research supports](https://quitpmo.com/how-to-stop-watching-porn.html): An evidence review in plain language: CBT and ACT therapy, if-then plans, urge surfing, blockers and abstinence claims, each with its size and its weakness, plus a practical week. Updated 2026-11-04.
+- [How to block porn on iPhone with Screen Time](https://quitpmo.com/block-porn-iphone-screen-time.html): The built-in iOS 26 Settings path for Limit Adult Websites, a passcode someone else keeps, what the filter misses, a seven-part setup checklist and where Ballast's own filter fits. Updated 2026-11-04.
+- [What to do after a slip](https://quitpmo.com/what-to-do-after-a-slip.html): A matter-of-fact plan for the next ten minutes, the next hour and tomorrow morning: get out of the situation, record what happened, adjust the plan, and when to ask for more help. Updated 2026-11-04.
+- [Apps to quit porn or PMO, compared](https://quitpmo.com/best-apps-to-quit-porn-compared.html): A dated comparison of ten App Store apps by US ratings, pricing structure and review themes, with the author's conflict of interest at the top and a section on where competitors are better than Ballast. Updated 2026-11-04.
+- [QUITTR left the App Store: what's known and what to do](https://quitpmo.com/quittr-left-the-app-store.html): A dated account of what can be verified about QUITTR's missing listing, with the cause stated as unknown, plus how to cancel a subscription through Apple, keep your start date and choose what's next. Updated 2026-11-04.
 
 This file is a plain reference for readers and assistants. It does not establish search ranking or AI recommendations.

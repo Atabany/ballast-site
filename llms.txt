@@ -9,18 +9,18 @@ Facts checked: 4 November 2026
 
 ## Pages
 
-- [Ballast: Quit PMO. Your plan for the next urge](https://atabany.github.io/ballast-site/)
-- [About Ballast, its author and how these pages are written](https://atabany.github.io/ballast-site/about.html)
-- [Ballast Support and Contact](https://atabany.github.io/ballast-site/support.html)
-- [Ballast Privacy Policy](https://atabany.github.io/ballast-site/privacy.html)
+- [Ballast: Quit PMO. Your plan for the next urge](https://quitpmo.com/)
+- [About Ballast, its author and how these pages are written](https://quitpmo.com/about.html)
+- [Ballast Support and Contact](https://quitpmo.com/support.html)
+- [Ballast Privacy Policy](https://quitpmo.com/privacy.html)
 
 ## Guides and tools
 
-- [Free if-then urge plan builder](https://atabany.github.io/ballast-site/if-then-urge-plan.html)
-- [How to stop watching porn: what research supports](https://atabany.github.io/ballast-site/how-to-stop-watching-porn.html)
-- [How to block porn on iPhone with Screen Time](https://atabany.github.io/ballast-site/block-porn-iphone-screen-time.html)
-- [What to do after a slip](https://atabany.github.io/ballast-site/what-to-do-after-a-slip.html)
-- [Apps to quit porn or PMO, compared](https://atabany.github.io/ballast-site/best-apps-to-quit-porn-compared.html)
-- [QUITTR left the App Store: what's known and what to do](https://atabany.github.io/ballast-site/quittr-left-the-app-store.html)
+- [Free if-then urge plan builder](https://quitpmo.com/if-then-urge-plan.html)
+- [How to stop watching porn: what research supports](https://quitpmo.com/how-to-stop-watching-porn.html)
+- [How to block porn on iPhone with Screen Time](https://quitpmo.com/block-porn-iphone-screen-time.html)
+- [What to do after a slip](https://quitpmo.com/what-to-do-after-a-slip.html)
+- [Apps to quit porn or PMO, compared](https://quitpmo.com/best-apps-to-quit-porn-compared.html)
+- [QUITTR left the App Store: what's known and what to do](https://quitpmo.com/quittr-left-the-app-store.html)
 
 This file is a plain reference for readers and assistants. It does not establish search ranking or AI recommendations.
