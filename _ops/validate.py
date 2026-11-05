@@ -74,7 +74,7 @@ MUST_STATE = {
 }
 if STATE == 'prelaunch':
     MUST_STATE.update({
-        'privacy.html': ['Ballast 1.0.1, the version on the App Store today', 'stays on your phone', 'rated 17+', 'Version 1.1 and later', 'Not released yet', 'Family Controls', 'No browsing data reaches Ballast', 'No app data reaches Ballast'],
+        'privacy.html': ['covers every version of Ballast', 'stays on your phone', 'rated 17+', 'Version 1.1 and later', 'From version 1.1', 'Family Controls', 'No browsing data reaches Ballast', 'No app data reaches Ballast'],
         'block-porn-iphone-screen-time.html': ['Limit Adult Websites', "Ballast 1.0.1 doesn't include a filter yet", "a phone's owner can undo Screen Time settings"],
         'what-to-do-after-a-slip.html': ['A slip is data', 'Your current run restarts'],
         'best-apps-to-quit-porn-compared.html': ['Conflict of interest', 'Where other apps are better than Ballast', 'Community', 'No website filter in version 1.0.1'],
@@ -385,7 +385,7 @@ for name, p in pages.items():
                 require(COMING_LINE in norm(html.unescape(re.sub(r'<[^>]+>', '', coming[0]))), 'the coming note must say exactly: ' + COMING_LINE)
                 require(not DATE_WORDS.search(re.sub(r'<[^>]+>', ' ', coming[0])), 'the coming note must carry no date')
             if name == 'privacy.html':
-                require('Version 1.1 and later' in coming[0] and 'Not released yet' in coming[0], 'the 1.1 privacy section must be labelled')
+                require('Version 1.1 and later' in coming[0] and 'From version 1.1' in coming[0], 'the 1.1 privacy section must be labelled')
         kept = COMING_RE.sub(' ', raw)
         if name == 'privacy.html':
             kept = kept.replace('Version 1.1 and later', ' ')  # The label pointing at the coming section.
