@@ -1,86 +1,116 @@
-# Publish checklist. For the owner's go-ahead only.
+# Publish checklist
 
-Nothing here has been done. `rebuild/next` is local and unpushed. `main` and the live site are
-unchanged, no DNS or console has been touched and nothing has been posted. Every step below is
-public or irreversible enough to need your approval.
+Two stages. `RELEASE_STATE` in `_ops/discovery.json` is the one switch between them.
 
-Order matters: **the App Store update comes first.** The site describes Ballast 1.1, which isn't
-released. On 2026-11-04 the App Store listing is version 1.0.1, with no filter, no Shield and no
-Voyage.
+- **`prelaunch`** (now): the site says only what's true of Ballast 1.0.1, the version on the App Store.
+- **`live`** (the day 1.1.0 is on the App Store): the full 1.1 site, from the same sources.
 
-## 1. Before anything goes live
+Every step below is public or hard to undo, so each needs the owner's or the coordinator's go-ahead.
 
-- [ ] Ballast 1.1 is approved and **live** on the App Store. Confirm: `curl -s "https://itunes.apple.com/lookup?id=6803731313&country=us" | python3 -c "import json,sys;r=json.load(sys.stdin)['results'][0];print(r['version'],r['userRatingCount'],r['trackName'])"`
+## Stage 1: prelaunch now
+
+Status on 2026-11-05: built and validated on branch `prelaunch`. Nothing pushed, and no DNS or GitHub setting changed.
+
+### Check before pushing
+
+```sh
+cd ~/indie/bs-pre
+python3 _ops/build.py --og && python3 _ops/validate.py --both   # both must print OK
+python3 _ops/test_states.py rebuild/next                        # must print OK
+git grep -nE '^(<<<<<<<|>>>>>>>)( |$)'                          # must print nothing
+```
+
+- [ ] `QUITTR_RECHECK.md` was done within the last day. If it can't be redone, pull that page and its links rather than publish stale facts.
+- [ ] `curl -s "https://itunes.apple.com/lookup?id=6803731313&country=us"` still shows version 1.0.1. If 1.1.0 is live, go to stage 2.
+- [ ] The owner has read `about.html` and the first-person statements on the comparison and QUITTR pages. They're written in his voice.
+
+### Connect the domain, in this order
+
+**DNS comes first.** Once Pages has a custom domain, `atabany.github.io/ballast-site/*` redirects to `quitpmo.com`. That address is the Privacy Policy and Support URL of the live app. If `quitpmo.com` doesn't resolve at that moment, those URLs break for users and for App Review.
+
+1. [ ] **Owner login, Cloudflare:** add the records in `DOMAIN_MOVE.md`, all DNS only. Check with `dig +short quitpmo.com` and `dig +short www.quitpmo.com`.
+2. [ ] Push. Pages serves `main` from the repo root, and `main` is an ancestor of `prelaunch`, so a fast-forward works:
+   ```sh
+   git -C ~/indie/bs-pre push origin prelaunch:main
+   ```
+3. [ ] Confirm the custom domain was picked up, or set it: `gh api -X PUT repos/Atabany/ballast-site/pages -f cname=quitpmo.com`.
+4. [ ] Enforce HTTPS once the certificate is approved: `gh api -X PUT repos/Atabany/ballast-site/pages -F https_enforced=true`. If the certificate sticks, remove and re-add the custom domain.
+
+### Check after pushing
+
+- [ ] `https://quitpmo.com/`, `/privacy.html`, `/support.html` and the guides return 200 over HTTPS.
+- [ ] `https://quitpmo.com/_ops/discovery.json` and `/README.md` return 404.
+- [ ] `https://quitpmo.com/does-not-exist` shows the styled 404.
+- [ ] Each old URL returns a 301 to the same path on `quitpmo.com`. The test is in `DOMAIN_MOVE.md`.
+- [ ] Open the home page on a real iPhone: Smart App Banner, badge, and a link that opens the right listing. Share the URL to yourself to see the Open Graph image.
+
+### Search engines and assistants
+
+These need a login, so the site carries no verification tokens.
+
+- [ ] **Owner login, Google Search Console:** Domain property `sc-domain:quitpmo.com`, verified with a DNS TXT record ("Any DNS provider"; don't authorise Google into Cloudflare). Submit `https://quitpmo.com/sitemap.xml`. Inspect the home page and each guide, then Request indexing. "Couldn't fetch" on day one is normal.
+- [ ] **Owner login, Bing Webmaster:** add `https://quitpmo.com/`, download `BingSiteAuth.xml`, put it at the repo root, build, push and verify. Don't use "import from Google". Submit the sitemap.
+- [ ] IndexNow: the key file `16bdd4cc417b5f9865b1f568f9965089.txt` is already at the root. After the site is live over HTTPS, run `python3 _ops/indexnow.py all`. No ping has been sent.
+- [ ] `robots.txt` allows AI crawlers and is authoritative at the domain root. `llms.txt` and `llms-full.txt` are at the root.
+
+### Next editable version in App Store Connect
+
+**Owner login.** These are locked while a version is in review, and redirects cover the gap.
+
+- [ ] Marketing URL to `https://quitpmo.com/`, Support URL to `/support.html`, Privacy Policy URL to `/privacy.html`, in every locale.
+- [ ] Retire `tools/build_site.py` in the app repo. It overwrites this site's files with old copy.
+
+### Known gaps in the live app to fix in 1.1
+
+- The in-app privacy text in 1.0.1 (`Services/Legal.swift` on `main`) says the export is "a complete JSON file of everything Ballast holds". The export leaves out plans, course progress, steps, weekly reviews and the picture. This site states what the export really contains. The `quitPorn-next` policy already has the correct wording.
+- `quitPorn-next/docs/PRIVACY_POLICY.md` doesn't mention **Sites you add** yet. The site's 1.1 section does, using the wording on `rebuild/next`. Bring the app's policy and `Services/Legal.swift` in line before submitting 1.1.
+
+## Stage 2: the day 1.1.0 is live
+
+Do these only once the App Store shows it: `curl -s "https://itunes.apple.com/lookup?id=6803731313&country=us" | python3 -c "import json,sys;r=json.load(sys.stdin)['results'][0];print(r['version'],r['userRatingCount'],r['trackName'])"`.
+
+### Before flipping
+
 - [ ] The real Shield path has been run on a device. It can't be tested on a simulator, so `FamilyControlsShield` is unverified until then.
-- [ ] Every entry in **"Claims that wait for the App Store update"** below is true of the shipped build.
-- [ ] Rating count re-read from that command. If there are ratings: the comparison's "No ratings yet" and the about page's and `llms-product.md`'s lines must change. The site still shows no stars; add a rating with its count only as the checklist describes, and only if real.
-- [ ] `QUITTR_RECHECK.md` completed on the day. If it can't be, delete that page's source and links for now and publish the rest.
-- [ ] **`assets/screens/ballast-shield-filter-and-commitment-lock-iphone.jpg` is mock output.** Reshoot from a real device before publishing, or replace with the abstract panel by deleting the file and rebuilding. The shipped Shield screen must match whatever stays in that slot.
-- [ ] Every other `SCREENSHOTS_NEEDED.md` slot still matches the shipped build.
-- [ ] Privacy policy source in the app repo still matches this site's `privacy.html` (`docs/PRIVACY_POLICY.md` and `Services/Legal.swift` in `quitPorn-next`).
-- [ ] **Retire `tools/build_site.py` in the app repo.** It overwrites `index.html`, `privacy.html`, `support.html`, `robots.txt`, `sitemap.xml` and `llms.txt`, and its old copy would undo this site. Site source is now `_ops/content/` here.
-- [ ] Update `docs/kb/website.md` in the app repo: its guide note says Ballast has no filter, and that the generator owns these files.
-- [ ] Copy read by you, especially `about.html` (it says you're not a clinician, no clinician reviewed the site, and that AI tools help with research, drafting and building) and the first-person statements on the comparison and QUITTR pages. They're written in your voice. Edit anything you wouldn't sign.
-- [ ] Age rating: `privacy.html` says 16+, from the app docs. Apple's iTunes lookup reported `17+` on 2026-11-04, which may just be how that API maps the rating. Confirm in App Store Connect.
-- [ ] Optional but recommended: a qualified clinician reads `how-to-stop-watching-porn.html` and `what-to-do-after-a-slip.html`. Then the about page's sentence changes.
+- [ ] **Reshoot Shield from a real device.** `_ops/live/assets/screens/ballast-shield-filter-and-commitment-lock-iphone.jpg` is mock output. Replace it, or delete it so the slot falls back to the abstract panel.
+- [ ] Every other shot in `SCREENSHOTS_NEEDED.md` still matches the shipped build. Replace any that don't in `_ops/live/assets/screens/`.
+- [ ] `_ops/live/assets/` holds the icon that shipped. If it isn't what's on the App Store, regenerate the icon files there.
+- [ ] Every row in **Claims that wait for the App Store update** below is true of the shipped build.
+- [ ] Rating count re-read. If there are ratings, the comparison's "No ratings yet", the about page and `llms-product.md` must change. The site still shows no stars unless the count and rating are real.
+- [ ] `QUITTR_RECHECK.md` done again that day. Update `_ops/content/quittr-left-the-app-store.html`.
+- [ ] Privacy text in `_ops/content/privacy.html` still matches `docs/PRIVACY_POLICY.md` and `Services/Legal.swift` in the app repo.
 
-## 2. Merge and publish on github.io
+### Flip
 
 ```sh
-cd ~/indie/ballast-site-next
-python3 _ops/build.py --og && python3 _ops/validate.py    # must print OK
-git grep -nE '^(<<<<<<<|>>>>>>>)( |$)'                    # must print nothing
-git push origin rebuild/next
-cd ~/indie/ballast-site && git pull --ff-only && git merge --ff-only rebuild/next && git push origin main
+# 1. In _ops/discovery.json set "RELEASE_STATE": "live", and update factsChecked
+python3 _ops/build.py --og      # regenerates Open Graph images with the new icon
+python3 _ops/validate.py        # must print OK
+git grep -nE '^(<<<<<<<|>>>>>>>)( |$)'
+git add -A && git commit        # then push to main
+python3 _ops/indexnow.py all    # after the new pages are live
 ```
 
-GitHub Pages serves `main`. Then check:
+The flip swaps icons and screenshots by itself: `build.py` installs `_ops/live/assets` into `assets/` and removes the prelaunch set.
 
-- [ ] `curl -sI https://atabany.github.io/ballast-site/privacy.html` and `support.html`, the guide and the home page return 200. The app and App Store Connect link to the first two.
-- [ ] `https://atabany.github.io/ballast-site/does-not-exist` shows the styled 404.
-- [ ] Open the home page on a real iPhone: Smart App Banner, badge, and an App Store link that opens the right listing.
-- [ ] Share the home URL to yourself to see the Open Graph image.
+### After flipping
 
-## 3. Domain (optional; you choose, you pay)
-
-Follow `DOMAIN_MOVE.md`. Summary: buy on Cloudflare Registrar, set DNS only (4 x A 185.199.108-111.153, 4 x AAAA 2606:50c0:8000-8003::153, `www` CNAME `atabany.github.io`), change `SITE_URL`, rebuild, validate, add `CNAME`, merge, enforce HTTPS with `gh api -X PUT repos/Atabany/ballast-site/pages -F https_enforced=true` once the certificate is approved, and test each 301.
-
-## 4. Consoles
-
-These work properly only with your own domain.
-
-- [ ] Google Search Console: Domain property `sc-domain:<domain>`, verified by DNS TXT ("Any DNS provider"; never authorise Google into Cloudflare). Submit `https://<domain>/sitemap.xml`. Inspect the home page and each page, then Request indexing. "Couldn't fetch" on day one is normal.
-- [ ] Bing Webmaster: add `https://<domain>/`, verify with `BingSiteAuth.xml` at the root (don't use "import from Google"), submit the sitemap.
-- [ ] Without a domain, a URL-prefix property for the github.io path is possible with an HTML file. It would need redoing after a move.
-
-## 5. IndexNow (only with your own domain)
-
-```sh
-python3 _ops/indexnow.py init        # creates <key>.txt at the root; commit and push it
-python3 _ops/indexnow.py all         # after the key file is live
-```
-It refuses to run on github.io, because the key must be at the host root.
-
-## 6. App Store Connect, next editable version
-
-- [ ] Marketing URL to home. Support URL to `/support.html`. Privacy Policy URL to `/privacy.html`, in every locale. These are locked while a version is live or in review.
-- [ ] `Services/Legal.swift`: update URLs for the next build if the domain changed. Old builds keep working through the redirects.
-- [ ] App privacy label: re-read it against this policy once Family Controls ships. App Review may ask how the entitlement's data is handled; the policy's Shield section is the answer.
-
-## 7. Afterwards
-
-- [ ] Dated baseline first: App Store impressions, page views, downloads, web referrers. Baseline in `docs/REBUILD.md`: Aug 5 to Nov 2, 2026, 366 impressions, 38 page views, 11 downloads. Note 1.1 itself as a confounder.
-- [ ] Campaign results appear in App Analytics once they pass Apple's thresholds. An empty report doesn't mean zero traffic. `ballast_index`, `ballast_support`, `ballast_privacy` and `ballast-guide-block-porn` are existing tags kept for continuity.
-- [ ] Off-site (Reddit answers, list-author outreach, video): drafted for your review; you post.
-- [ ] Weekly content routine and growth review: not set up. Set them up only once you've approved publishing.
+- [ ] App Store Connect, in the next version: confirm the listing's Marketing, Support and Privacy Policy URLs are on `quitpmo.com`, and remove any `atabany.github.io` URL from the description. `Services/Legal.swift` also moves to the new URLs for the next build. Old builds keep working through the redirects.
+- [ ] Re-read the App Privacy label against the policy, now Family Controls has shipped.
+- [ ] Update `docs/kb/website.md` in the app repo.
+- [ ] Clean up: delete `_ops/prelaunch/`, `_ops/prelaunch_edits.py` and the `prelaunch` block in `discovery.json`. In `_ops/content/privacy.html`, the note about earlier versions stays.
+- [ ] Dated baseline: App Store impressions, page views, downloads, web referrers. Baseline in `docs/REBUILD.md`: Aug 5 to Nov 2, 2026, 366 impressions, 38 page views, 11 downloads. Note 1.1 as a confounder.
+- [ ] Off-site (Reddit answers, list-author outreach, video): drafted for review; the owner posts. Weekly content routine and growth review: set up only once approved.
+- [ ] Optional: a qualified clinician reads `how-to-stop-watching-porn.html` and `what-to-do-after-a-slip.html`. Then the about page's sentence changes.
 
 ## Claims that wait for the App Store update
 
-All of these are true of the spec in `docs/REBUILD.md`, not of the live 1.0.1. None is verified on a shipped build.
+All of these are true of the spec in `docs/REBUILD.md`, not of the live 1.0.1. None is verified on a shipped build. `validate.py` keeps them off the site in prelaunch.
 
-| Claim | Where | Check in the shipped build |
+| Claim | Where (live state) | Check in the shipped build |
 |---|---|---|
 | One-tap adult-website filter, free; disables Safari private browsing | Home, guide, support, privacy, comparison, FAQ, llms, fact block | Shield tab, on a device |
+| Sites you add: 3 free, up to 25 with Pro; stay on the phone; out of backups | Home, guide, support, privacy, comparison, llms | Shield tab, on a device |
 | Commitment lock: cool-off 10 min, 1 h, 24 h; trusted-person code; 24-hour wait always works; salted hash only | Home, guide, support, privacy, comparison | Pro on a device, including the 24-hour path |
 | App shields until a chosen time; lift when Ballast next opens | Home, guide, privacy | Pro on a device |
 | Locks release if Pro ends; filter stays yours | Home, guide, support, comparison | Let a sandbox subscription lapse |
@@ -90,9 +120,6 @@ All of these are true of the spec in `docs/REBUILD.md`, not of the live 1.0.1. N
 | Clear days never reset; waypoints 1, 3, 7, 14, 30, 60, 100, 180, 365; slips as ordinary marks | Home, slip page, comparison, llms | Voyage tab |
 | Backup and restore through a file, free; Shield settings stay out of the backup | Home, support, privacy, comparison | Round trip on a device |
 | A finished wait opens a 15-minute window | Support | `ShieldPolicy.releaseWindow` |
-| After-slip "next hour" support and the day-after card; no offers at that moment | Slip page | Log a slip |
 | Setup asks how long since the last time | QUITTR page | Onboarding |
 | Privacy page: RevenueCat asked at each launch and foreground; export leaves out plans, course answers, steps, reviews and the picture | Privacy, support, llms | `Store.refresh`, `DataExport`, same wording as `docs/PRIVACY_POLICY.md` |
 | `softwareVersion` 1.1.0 | JSON-LD, `discovery.json` | Set to the live version |
-
-**Could go live before the update**, if you wanted, after removing or rewording their Ballast sections and calls to action: `how-to-stop-watching-porn.html`, `if-then-urge-plan.html`, `what-to-do-after-a-slip.html`, the QUITTR page. The current guide's statement that Ballast has no filter stays true until 1.1 ships, so `block-porn-iphone-screen-time.html` should only change with the release.

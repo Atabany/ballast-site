@@ -8,27 +8,34 @@ The public website for **Ballast: Quit PMO**, an iPhone app. Plain HTML, one CSS
 
 | Source | What it is |
 |---|---|
-| `_ops/discovery.json` | App facts, the fact block and **`SITE_URL`, the one place a host is written** |
+| `_ops/discovery.json` | App facts, the fact block, **`SITE_URL`, the one place a host is written**, and **`RELEASE_STATE`** |
 | `_ops/content/*.html` | Page text. Each starts with a JSON meta block |
 | `_ops/llms-product.md` | The plain product summary in `llms-full.txt` |
 | `_ops/horizon.py` | The swell artwork, pure SVG |
 | `assets/site.css`, `assets/urge-plan.js` | Style; the plan builder |
+| `_ops/live/assets`, `_ops/prelaunch/assets` | Icons, Open Graph images and screenshots for each state. The build copies the current state's set into `assets/` |
+| `_ops/prelaunch/pages`, `_ops/prelaunch_edits.py`, `_ops/prelaunch/llms-product.md` | What differs before 1.1.0 is on the App Store |
+
+## Release state
+
+`"RELEASE_STATE": "prelaunch"` publishes only what's true of the version on the App Store today. `"live"` publishes the full 1.1 site, with no other edits. Change that line, rebuild, validate. In `prelaunch` the validator fails on any claim of an unshipped feature, except in the labelled coming note. A failed edit in `prelaunch_edits.py` stops the build, so if the live copy changes the prelaunch page can't drift unnoticed.
 
 ```sh
 python3 _ops/build.py        # regenerate the site
 python3 _ops/build.py --og   # also regenerate Open Graph images (headless Chrome, Pillow)
 python3 _ops/validate.py     # must print OK before publishing
+python3 _ops/validate.py --both        # both states, in temporary copies
+python3 _ops/test_states.py rebuild/next  # flip both ways against a baseline; plant claims and check they're caught
 ```
 
-Check locally from a folder where the repo appears at the `SITE_URL` path:
+Check locally:
 
 ```sh
-mkdir -p /tmp/serve && ln -sfn "$PWD" /tmp/serve/ballast-site
-python3 -m http.server 8765 -d /tmp/serve
-python3 _ops/linkcheck.py http://localhost:8765/ballast-site/ --external
+python3 -m http.server 8765
+python3 _ops/linkcheck.py http://localhost:8765/ --external
 ```
 
-Pages keep their names when moved. `privacy.html` and `support.html` are App Store Connect URLs and linked from the app, so never rename them.
+GitHub Pages' Jekyll build keeps `_ops` private, so never add a `.nojekyll` file. Pages keep their names when moved. `privacy.html` and `support.html` are App Store Connect URLs and linked from the app, so never rename them.
 
 ## Rules
 
@@ -43,7 +50,7 @@ Page shortcodes (store, cta, help, facts, slot, plan_table) are listed in `expan
 
 ## Ops docs
 
-- `_ops/PUBLISH_CHECKLIST.md`: exact steps for publishing, and which claims wait for the App Store update
+- `_ops/PUBLISH_CHECKLIST.md`: two stages, prelaunch now and the day 1.1.0 is live, and which claims wait for the update
 - `_ops/QUITTR_RECHECK.md`: facts to recheck on publish day
 - `_ops/DOMAIN_MOVE.md`: one-line domain change and the redirect plan
 - `_ops/SCREENSHOTS_NEEDED.md`: real app captures to supply; slots use abstract artwork until then

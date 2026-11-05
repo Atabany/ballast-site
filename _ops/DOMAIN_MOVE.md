@@ -1,6 +1,10 @@
 # Moving from github.io to Ballast's own domain
 
-**`quitpmo.com` was registered on 2026-11-04** at Cloudflare by the owner (1 year, auto-renew on, Cloudflare nameservers). `SITE_URL` and `CNAME` on this branch already point at it. **No DNS records exist yet, and nothing is connected:** connecting waits for the owner's go-ahead, per `PUBLISH_CHECKLIST.md`.
+**`quitpmo.com` was registered on 2026-11-04** at Cloudflare by the owner (1 year, auto-renew on, Cloudflare nameservers). `SITE_URL` and `CNAME` on this branch already point at it. **No DNS records exist yet (checked 2026-11-05: `dig` returns nothing), and Pages has no custom domain (`cname: null`):** connecting waits for the go-ahead, per `PUBLISH_CHECKLIST.md`.
+
+**Order matters: add DNS first, push second.** The push carries the `CNAME` file. Once Pages has the domain, the `github.io` URLs redirect to it, and those are the live app's Privacy Policy and Support URLs. They mustn't redirect to a name that doesn't resolve.
+
+**How `_ops` stays private:** Pages is a legacy branch build (`main`, root), which runs Jekyll, and Jekyll skips folders that start with an underscore. On 2026-11-05 `atabany.github.io/ballast-site/_ops/discovery.json` returned 404 and a local Jekyll 3.10 build of this tree published the root files byte for byte, without `_ops`, `_config.yml` or `README.md`. Never add `.nojekyll`: it would publish `_ops`, and `validate.py` fails if it appears.
 
 DNS records for GitHub Pages at publish time, all **DNS only** (grey cloud, no proxy): `A @` to 185.199.108.153, 185.199.109.153, 185.199.110.153 and 185.199.111.153; `AAAA @` to 2606:50c0:8000::153, 2606:50c0:8001::153, 2606:50c0:8002::153 and 2606:50c0:8003::153; `CNAME www` to atabany.github.io. Verify these against GitHub's current docs on the day. Then set the custom domain in the Pages settings, enforce HTTPS, and test redirects.
 

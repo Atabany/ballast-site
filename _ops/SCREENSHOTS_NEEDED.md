@@ -5,11 +5,16 @@ artwork, `alt=""`, with no fake interface. **Never put mock UI in these slots.**
 captured from Ballast 1.1 itself, on a device or simulator. Don't use `MockShield` output as evidence
 of the real Shield path unless the real path has been run on a device first.
 
-To supply one: save it as `assets/screens/<filename>`, run `python3 _ops/build.py`, then
-`python3 _ops/validate.py`. The build picks up the file, its dimensions and the alt text by itself.
+**These belong to the `live` state only.** They wait in `_ops/live/assets/screens/` and reach
+`assets/screens/` only when `RELEASE_STATE` is `live`, so no 1.1 screen is public before release.
+Prelaunch pages use abstract panels.
+
+To supply one: save it as `_ops/live/assets/screens/<filename>`, run `python3 _ops/build.py`, then
+`python3 _ops/validate.py --state live`. The build picks up the file, its dimensions and the alt
+text by itself.
 
 Recommended export, from a 6.3" capture (1206 x 2622 pixels):
-`sips -s format jpeg -s formatOptions 82 -Z 1560 capture.png --out assets/screens/<filename>.jpg`
+`sips -s format jpeg -s formatOptions 82 -Z 1560 capture.png --out _ops/live/assets/screens/<filename>.jpg`
 
 Use `-seed-demo` data, which contains no real person's data. Avoid anything explicit in shot content.
 Launch arguments are in `CLAUDE.md` and `docs/kb/simulator-and-debug.md` of the app repo.
