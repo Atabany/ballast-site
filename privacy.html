@@ -94,7 +94,7 @@
 <ul>
 <li>your clear days, and the tools you used during an urge</li>
 <li>any plan drafts, and the answers you write in the course</li>
-<li>your Shield settings, including any cool-off you chose and a salted hash of a trusted-person code (not the code itself)</li>
+<li>your Shield settings, including any cool-off you chose and a salted hash of a trusted-person code (not the code itself), and the websites you add to the filter</li>
 </ul>
 <h3 id="v11-shield">Shield and Apple's Family Controls</h3>
 <p>Shield uses Apple's Family Controls and Managed Settings, with your permission, to turn on the adult-website filter and to shield apps you choose. Here's what that means for your data:</p>
@@ -103,11 +103,12 @@
 <li><strong>No app data reaches Ballast.</strong> You choose apps in Apple's own picker, and Ballast receives opaque tokens to pass back to iOS. It can't read the names of the apps you picked and doesn't see how you use them. Your choices stay on your device.</li>
 <li><strong>Nothing about this leaves your phone from Ballast.</strong> No browsing or app-usage data is read by Ballast or sent to me or anyone else by Ballast, because there's no server to send it to. Apple's own handling of iOS features is covered by Apple's privacy policy.</li>
 <li><strong>Trusted-person code.</strong> If you use the commitment lock, Ballast makes a code and you send it yourself, once, through the iOS share sheet to whoever you choose, using whichever app you choose. That message is between you, them and that app. Ballast keeps only a salted hash and forgets the code.</li>
+<li><strong>Sites you add.</strong> The websites you add to the filter stay on your phone and are handed to iOS, which does the blocking. Ballast doesn't send them anywhere, and they're never in a backup file, an export, a widget, a notification or a log. Apple's device backups can include them, as described above.</li>
 <li><strong>You can withdraw permission at any time</strong> in Settings. The Shield screen will then say the shield is down.</li>
 </ul>
 <h3 id="v11-control">Backup, restore and deleting</h3>
 <ul>
-<li><strong>Backup and restore.</strong> A backup is the full copy of your history, plans and progress: a file you save through the share sheet and restore yourself. Ballast keeps no copy. Shield settings stay on this phone and aren't in the file. A backup holds your private entries, so keep it somewhere you trust. Restoring reads the file on your phone.</li>
+<li><strong>Backup and restore.</strong> A backup is the full copy of your history, plans and progress: a file you save through the share sheet and restore yourself. Ballast keeps no copy. Shield settings, including the sites you add, stay on this phone and aren't in the file. A backup holds your private entries, so keep it somewhere you trust. Restoring reads the file on your phone.</li>
 <li><strong>Delete.</strong> Apple doesn't document whether a website filter or app shield outlasts deleting the app, so it may. If something is still blocked afterwards, look in Settings, under Screen Time.</li>
 </ul>
 <!--coming:end-->

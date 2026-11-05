@@ -12,9 +12,9 @@ EDITS = {
     'about.html': [UPDATED],
 
     'best-apps-to-quit-porn-compared.html': [
-        UPDATED,
-        ('New and unproven at scale. Free filter and urge flow, no account. No community.',
+        ("New and unproven at scale. Free filter and urge flow, no account. Apple's filter can miss sites, so you add those yourself. No community.",
          'New and unproven at scale. Free urge flow, no account. No website filter in version 1.0.1. No community.'),
+        (''' Ballast uses Apple's filter, which can miss sites, plus any sites you add yourself.''', ''),
         ('''<li><strong>Accountability with another person's eyes on it.</strong> Ballast's trusted person holds a code; they don't get reports. If you want someone to be told, this isn't that.</li>''',
          '''<li><strong>Built-in blocking.</strong> Ballast 1.0.1 doesn't include a filter yet. Its friction checklist walks you through Apple's free Screen Time steps. If you want blocking inside the app, look at the apps above that have it.</li>
 <li><strong>Accountability with another person's eyes on it.</strong> Ballast's partner card is something you choose to send yourself; nobody gets reports. If you want someone to be told, this isn't that.</li>'''),
@@ -33,7 +33,6 @@ EDITS = {
     ],
 
     'block-porn-iphone-screen-time.html': [
-        UPDATED,
         ('''what the filter misses, a seven-part setup checklist and where Ballast's own filter fits.''',
          '''what it misses, a seven-part setup checklist and where Ballast fits. Ballast 1.0.1 doesn't include a filter yet.'''),
         ('''<p>Below: the exact steps, how to lock them, the filter's limits, a seven-part checklist and where Ballast fits.''',
@@ -41,7 +40,8 @@ EDITS = {
         ('''Everything above is free and built into iOS, and it may be all you want. Ballast 1.1 adds a filter of its own and a plan for what the filter can't reach. It is one option, and I make it, so weigh this section accordingly.</p>
 {{slot|ballast-shield-filter-and-commitment-lock-iphone|night|Ballast's Shield screen showing the adult-website filter turned on and the commitment lock settings.}}
 <ul>
-<li><strong>Filter (free).</strong> The <strong>Shield</strong> tab turns on Apple's adult-website filter with one tap, using Apple's Family Controls. Apple doesn't publish what counts as adult, so expect the same kind of misses and false matches as above. It also <a href="https://developer.apple.com/documentation/managedsettings/webcontentsettings/blockedbyfilter-swift.property">disables Safari private browsing</a>.</li>
+<li><strong>Filter (free).</strong> The <strong>Shield</strong> tab turns on Apple's adult-website filter with one tap, using Apple's Family Controls. Apple doesn't publish what counts as adult, so expect the same kind of misses and false matches as above. It also <a href="https://developer.apple.com/documentation/managedsettings/webcontentsettings/blockedbyfilter-swift.property">disables Safari private browsing</a>, which is also the quick way to check it's on: the Private option goes away in Safari.</li>
+<li><strong>Your own sites (3 free, up to 25 with Pro).</strong> If the filter misses a site, add it on the <strong>Shield</strong> tab, and iOS blocks it alongside its own list. Close any tab already open on it and try again. The list stays on your phone. Adding is always allowed; while a commitment lock is on, removing a site takes the same wait or code as turning the filter off. Whether a site you add also covers its other addresses is something Apple doesn't document, so Ballast adds the common forms. If another address for the site still gets through, add that too.</li>
 <li><strong>Commitment lock (Pro).</strong> Instead of a Screen Time passcode, turning protection off needs a cool-off you chose in advance (10 minutes, 1 hour or 24 hours), or a code you sent once to someone you trust. If they can't be reached, a 24-hour wait always works.</li>
 <li><strong>App shields (Pro).</strong> Choose apps in Apple's picker and shield them until a set time. The filter above doesn't cover what apps show in their own feeds; a shield is how you put a pause in front of those. The shield comes off the next time you open Ballast after that time.</li>
 <li><strong>The urge flow (free).</strong> Tap what's happening, see your own if-then plan and your own reason, then choose to breathe, ride the wave or do the thing you planned. <a href="if-then-urge-plan.html">You can write a plan in your browser first</a>.</li>
@@ -60,11 +60,11 @@ EDITS = {
 <p class="note"><strong>The limit on all of this:</strong> a phone's owner can undo Screen Time settings. No App Store app can stop a determined owner. These steps add friction, not walls.</p>
 <p>Your entries stay on your iPhone and no account is needed. <a href="privacy.html">The privacy policy</a> has the details.</p>
 {{cta|Set it up once, then have a plan for the hard minutes.|Ballast has a free urge flow, on your iPhone, with no account. It doesn't include a filter yet, so start with the steps above.}}'''),
-        ('''<p>Yes, from version 1.1. One tap in the Shield tab turns on Apple's adult-website filter, for free. It is not a VPN and it has the same limits as any filter: it can miss sites, and a phone's owner can undo it in Settings. The free Screen Time steps above do a similar job with no app.</p>
+        ('''<p>Yes, from version 1.1. One tap in the Shield tab turns on Apple's adult-website filter, for free. It is not a VPN and it has the same limits as any filter: it can miss sites, and a phone's owner can undo it in Settings. You can add the sites it misses on the Shield tab. The free Screen Time steps above do a similar job with no app.</p>
 <h3>Can Ballast stop me turning the filter off?</h3>
 <p>Not absolutely. With Pro, turning protection off inside Ballast needs a cool-off you chose earlier or a code held by someone you trust, and a 24-hour wait always works if they can't be reached. A phone's owner can still undo it in Settings. It adds a pause, which is the point.</p>''',
          '''<p>Not in the current version. Ballast 1.0.1 doesn't include a filter yet. Its free friction checklist walks you through the Screen Time steps above, which need no app.</p>'''),
-        ('''<p>The filter, the full urge flow, slip support and the friction checklist are free, with no account. Ballast Pro adds the commitment lock, app shields, unlimited urge plans, insights, the rest of the course and library, full history and a weekly review.</p>''',
+        ('''<p>The filter, 3 sites of your own, the full urge flow, slip support and the friction checklist are free, with no account. Ballast Pro adds the commitment lock, app shields, up to 25 of your own sites, unlimited urge plans, insights, the rest of the course and library, full history and a weekly review.</p>''',
          '''<p>The full urge flow, slip support and the friction checklist are free, with no account. Ballast Pro adds insights, the rest of the course and library, full history, extra habits and plans, and a weekly review.</p>'''),
         ('''and app steps describe Ballast 1.1; iOS menus''', '''and app steps describe Ballast 1.0.1; iOS menus'''),
     ],
