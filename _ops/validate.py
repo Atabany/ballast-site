@@ -4,16 +4,49 @@
 Metadata, links, install paths, JSON-LD, FAQ text, sitemap and llms coverage, plus the product's
 rules: no prices, no invented ratings, no banned claims, no third-party requests, one SITE_URL.
 Stdlib only, no network. See _ops/linkcheck.py for live and external link checks.
+
+    python3 _ops/validate.py                 # the repo root, in its current RELEASE_STATE
+    python3 _ops/validate.py --state live    # build that state in a temporary copy and check it
+    python3 _ops/validate.py --both          # both states, in temporary copies
+
+In prelaunch it also fails on any claim of a feature the App Store version doesn't have, in HTML,
+JSON-LD, FAQ, Open Graph, sitemap and the llms files. The only exception is text inside
+<!--coming:start-->...<!--coming:end--> on the two pages allowed to have it, and the one labelled
+"Coming in the next update" line in llms-full.txt.
 """
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs, unquote
-import filecmp, json, re, struct, subprocess, sys, tempfile
+import filecmp, html, json, re, shutil, struct, subprocess, sys, tempfile
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 OPS = ROOT / '_ops'
-C = json.loads((OPS / 'discovery.json').read_text())
+
+
+def validate_copy(state):
+    """Check a state without touching the working tree: temporary copy, flip, build, validate."""
+    with tempfile.TemporaryDirectory() as tmp:
+        copy = Path(tmp) / 'site'
+        shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns('.git', '__pycache__'))
+        conf = copy / '_ops/discovery.json'
+        raw = json.loads(conf.read_text())
+        raw['RELEASE_STATE'] = state
+        conf.write_text(json.dumps(raw, indent=2, ensure_ascii=False) + '\n')
+        subprocess.run([sys.executable, str(copy / '_ops/build.py')], check=True, capture_output=True)
+        run = subprocess.run([sys.executable, str(copy / '_ops/validate.py')], text=True, capture_output=True)
+        print(f'[{state}] ' + (run.stdout + run.stderr).strip())
+        return run.returncode
+
+
+if '--both' in sys.argv or '--state' in sys.argv:
+    states = ['prelaunch', 'live'] if '--both' in sys.argv else [sys.argv[sys.argv.index('--state') + 1]]
+    raise SystemExit(1 if any([validate_copy(s) for s in states]) else 0)
+
+sys.path.insert(0, str(OPS))
+import build  # noqa: E402
+
+C, STATE = build.C, build.STATE
 SITE = C['SITE_URL']
 APP = str(C['appId'])
 errors = []
@@ -39,6 +72,56 @@ MUST_STATE = {
     'what-to-do-after-a-slip.html': ['A slip is data', 'Clear days never reset'],
     'index.html': ['Your plan for the next urge', 'Private. Secular. No brain myths.', 'Shield', 'Urge plans', 'Voyage', 'uses skills from CBT and ACT'],
 }
+if STATE == 'prelaunch':
+    MUST_STATE.update({
+        'privacy.html': ['Ballast 1.0.1, the version on the App Store today', 'stays on your phone', 'rated 17+', 'Version 1.1 and later', 'Not released yet', 'Family Controls', 'No browsing data reaches Ballast', 'No app data reaches Ballast'],
+        'block-porn-iphone-screen-time.html': ['Limit Adult Websites', "Ballast 1.0.1 doesn't include a filter yet", "a phone's owner can undo Screen Time settings"],
+        'what-to-do-after-a-slip.html': ['A slip is data', 'Your current run restarts'],
+        'best-apps-to-quit-porn-compared.html': ['Conflict of interest', 'Where other apps are better than Ballast', 'Community', 'No website filter in version 1.0.1'],
+        'support.html': ['Not in version 1.0.1', 'Export my data', 'Restore purchase'],
+        'index.html': ['Your plan for the next urge', 'Private. Secular. No brain myths.', "Coming in the next update: a built-in adult-website filter and progress a slip can't erase.", 'uses skills from CBT and ACT', 'Insights', 'Ballast 1.0.1'],
+    })
+
+# Prelaunch: features the App Store version doesn't have. Any match outside a coming block fails.
+UNSHIPPED = [r'shield\w*', r'commitment[- ]lock\w*', r'voyage\w*', r'clear[- ]days?', r'waypoints?', r'cool[- ]off', r'trusted[- ]person', r'sites you add',
+             r'family controls', r'managed ?settings', r'blockedbyfilter', r'backup and restore', r'back up and restore', r'backup files?', r'one[- ]tap', r"today's watch",
+             r'plan tab', r'never resets?', r"(?:progress|days?) (?:that )?a slip can'?t erase", r'unlimited (?:urge )?plans', r'free filter', r'filter and (?:the |a )?(?:free )?urge flow',
+             r"tap what's happening", r'ballast 1\.1', r'version 1\.1(?:\.0)?', r'1\.1\.0', r'assets/screens']
+UNSHIPPED_RE = re.compile(r'(?<![\w-])(?:' + '|'.join(UNSHIPPED) + r')(?![\w])', re.I)
+COMING_RE = re.compile(r'<!--coming:start-->(.*?)<!--coming:end-->', re.S)
+COMING_LINE = "Coming in the next update: a built-in adult-website filter and progress a slip can't erase."
+DATE_WORDS = re.compile(r'\b(?:20\d\d|soon|shortly|weeks?|months?|january|february|march|april|june|july|august|september|october|november|december|q[1-4])\b', re.I)
+NEGATED = re.compile(r"\b(?:doesn't|does not|has no|have no|no website filter|no filter|not in|isn't)\b", re.I)
+APP_REF = re.compile(r'\b(?:Ballast\w*|this app|in-app)\b', re.I)
+BLOCK_WORD = re.compile(r'\bfilter\w*|\bblock(?:s|ing)? (?:websites|sites|porn|adult)', re.I)
+BACKUP_WORD = re.compile(r'\bbackups?\b|\bback up\b|\brestor\w+', re.I)
+BACKUP_OK = re.compile(r'iCloud|computer|Mac\b|device|Apple|purchase|paywall|\bPro\b', re.I)
+
+
+def sentences(text):
+    return [s.strip() for s in re.split(r'(?<=[.!?;])\s+|\n+', text) if s.strip()]
+
+
+def unshipped_claims(where, text, plain_text=None):
+    """Hard terms anywhere in the text, then sentence rules: Ballast with a filter must be negated."""
+    found = [f'{where}: unshipped claim "{m[0]}" in ...{norm(text[max(0, m.start() - 50):m.end() + 40])}...' for m in UNSHIPPED_RE.finditer(text)]
+    for s in sentences(plain_text if plain_text is not None else text):
+        if s.endswith('?'):
+            continue
+        if BLOCK_WORD.search(s) and APP_REF.search(s) and not NEGATED.search(s):
+            found.append(f'{where}: unshipped claim, Ballast with a filter or blocking: {s[:160]}')
+        if BACKUP_WORD.search(s) and not BACKUP_OK.search(s):
+            found.append(f'{where}: unshipped claim, backup or restore: {s[:160]}')
+    return found
+
+
+def json_strings(value):
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        value = list(value.values())
+    return [s for v in value for s in json_strings(v)] if isinstance(value, list) else []
+
 
 
 class Page(HTMLParser):
@@ -127,7 +210,7 @@ def url_for(name):
 
 def source_scan_text(name):
     """Source text with quoted sections and tags removed, for the vocabulary rules."""
-    src = (OPS / 'content' / name).read_text()
+    src = build.page_source(name)
     def meta_text(m):
         d = json.loads(m[0][8:-3])
         return ' '.join(d.get(k, '') for k in ('title', 'h1', 'description', 'answer', 'summary', 'disclosure'))
@@ -147,23 +230,33 @@ for path in ROOT.glob('*.html'):
 
 metas = {}
 for f in (OPS / 'content').glob('*.html'):
-    metas[f.name] = json.loads(re.match(r'<!--meta\s*(\{.*?\})\s*-->', f.read_text(), re.S)[1])
+    metas[f.name] = json.loads(re.match(r'<!--meta\s*(\{.*?\})\s*-->', build.page_source(f.name), re.S)[1])
 indexable = [n for n in pages if metas.get(n, {}).get('kind') != '404']
 
 # 1. Single SITE_URL: nothing may hard-code a host, and the built output must be fresh.
 if not (SITE.startswith('https://') and SITE.endswith('/')):
     errors.append('SITE_URL must be https and end in /')
 host = urlsplit(SITE).netloc
-for f in list((OPS / 'content').glob('*.html')) + [OPS / 'build.py', OPS / 'llms-product.md']:
+for f in list((OPS / 'content').glob('*.html')) + list((OPS / 'prelaunch/pages').glob('*.html')) + [OPS / 'build.py', OPS / 'llms-product.md', OPS / 'prelaunch/llms-product.md']:
     if 'github.io' in f.read_text():
         errors.append(f.name + ': hard-codes a github.io URL; use relative links or SITE_URL')
 with tempfile.TemporaryDirectory() as tmp:
     subprocess.run([sys.executable, str(OPS / 'build.py'), '--out', tmp], check=True, capture_output=True)
-    for f in Path(tmp).iterdir():
+    for f in Path(tmp).rglob('*'):
         if f.is_file():
-            target = ROOT / f.name
+            target = ROOT / f.relative_to(tmp)
             if not target.exists() or not filecmp.cmp(f, target, shallow=False):
-                errors.append(f.name + ': stale. Run python3 _ops/build.py')
+                errors.append(str(f.relative_to(tmp)) + ': stale. Run python3 _ops/build.py')
+
+# 1b. Hosting. GitHub Pages' Jekyll build is what keeps _ops private, so it must stay on.
+if (ROOT / '.nojekyll').exists():
+    errors.append('.nojekyll would publish _ops: remove it')
+cname = ROOT / 'CNAME'
+if not cname.exists() or cname.read_text().strip() != host:
+    errors.append('CNAME must contain ' + host)
+for f in ROOT.glob('*.txt'):
+    if re.fullmatch(r'[0-9a-f]{32}', f.stem) and f.read_text().strip() != f.stem:
+        errors.append(f.name + ': IndexNow key file must contain its own key')
 
 # 2. Sitemap, robots, llms.
 urls = {x.text for x in ET.parse(ROOT / 'sitemap.xml').getroot().iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')}
@@ -284,6 +377,23 @@ for name, p in pages.items():
         require(norm(phrase) in text.replace('’', "'"), 'must state: ' + phrase)
     for slot in re.findall(r'<!-- slot:([\w-]+) -->', raw):
         slots_used.add(slot)
+    if STATE == 'prelaunch':
+        coming = COMING_RE.findall(raw)
+        if coming:
+            require(name in ('index.html', 'privacy.html') and len(coming) == 1, 'a coming block belongs once on the home and privacy pages only')
+            if name == 'index.html':
+                require(COMING_LINE in norm(html.unescape(re.sub(r'<[^>]+>', '', coming[0]))), 'the coming note must say exactly: ' + COMING_LINE)
+                require(not DATE_WORDS.search(re.sub(r'<[^>]+>', ' ', coming[0])), 'the coming note must carry no date')
+            if name == 'privacy.html':
+                require('Version 1.1 and later' in coming[0] and 'Not released yet' in coming[0], 'the 1.1 privacy section must be labelled')
+        kept = COMING_RE.sub(' ', raw)
+        if name == 'privacy.html':
+            kept = kept.replace('Version 1.1 and later', ' ')  # The label pointing at the coming section.
+        visible = re.sub(r'(?s)<!--.*?-->|<head>.*?</head>|<nav class="crumbs".*?</nav>', ' ', kept)
+        visible = html.unescape(re.sub(r'<[^>]+>', ' ', re.sub(r'</(?:li|p|td|th|h\d|div|tr|ul|ol|caption)>', '\n', visible)))
+        extras = ' \n'.join(json_strings(p.schema) + [v for k, vs in p.meta.items() if k != 'Content-Security-Policy' for v in vs] + [p.title])
+        errors.extend(unshipped_claims(name, html.unescape(kept), visible + ' \n' + extras))
+        require('<!-- slot:' not in raw, 'no screenshot slots before release: use {{panel|theme}}')
     for img in p.images:
         if 'assets/screens/' in img.get('src', ''):
             slots_used.add(Path(img['src']).stem)
@@ -326,12 +436,29 @@ for n, m in metas.items():
             errors.append(n + ': not linked from the home page')
         if n not in pages['support.html'].links:
             errors.append(n + ': not linked from the support page')
-for slot in slots_used:
-    if slot not in needed:
-        errors.append(f'Screenshot slot {slot} is not listed in _ops/SCREENSHOTS_NEEDED.md')
-for n in re.findall(r'`(ballast-[\w-]+)\.(?:jpg|png)`', needed):
-    if n not in slots_used:
-        errors.append(f'SCREENSHOTS_NEEDED.md lists {n}, which no page uses')
+if STATE == 'live':
+    for slot in slots_used:
+        if slot not in needed:
+            errors.append(f'Screenshot slot {slot} is not listed in _ops/SCREENSHOTS_NEEDED.md')
+    for n in re.findall(r'`(ballast-[\w-]+)\.(?:jpg|png)`', needed):
+        if n not in slots_used:
+            errors.append(f'SCREENSHOTS_NEEDED.md lists {n}, which no page uses')
+else:
+    # Files at the root are public whether or not a page links them.
+    if (ROOT / 'assets/screens').exists():
+        errors.append('assets/screens must not exist before release: 1.1 screens would be public')
+    for f in (OPS / 'live/assets').glob('*.png'):
+        target = ROOT / 'assets' / f.name
+        if target.exists() and filecmp.cmp(f, target, shallow=False):
+            errors.append(f'assets/{f.name} is the 1.1 icon, not the one on the App Store today')
+    for ref in ['llms.txt', 'llms-full.txt', 'sitemap.xml', 'robots.txt']:
+        body = (ROOT / ref).read_text()
+        if ref == 'llms-full.txt' and body.count(COMING_LINE) != 1:
+            errors.append('llms-full.txt: needs the labelled coming line once')
+        body = body.replace(COMING_LINE, ' ')
+        errors.extend(unshipped_claims(ref, body, re.sub(r'\[[^\]]*\]\([^)]*\)', ' ', body)))
+    if COMING_LINE in llms:
+        errors.append('llms.txt: the coming line belongs only in llms-full.txt')
 for doc in ['PUBLISH_CHECKLIST.md', 'SCREENSHOTS_NEEDED.md', 'QUITTR_RECHECK.md', 'DOMAIN_MOVE.md']:
     if not (OPS / doc).exists():
         errors.append('_ops/' + doc + ' is missing')
@@ -346,4 +473,4 @@ if errors:
     print('\n'.join(errors))
     print(f'\nFAILED with {len(errors)} problem(s)')
     raise SystemExit(1)
-print(f'OK: {C["shortName"]}: {len(pages)} pages on {SITE}. Metadata, assets, links, schema, FAQ text, sitemap, robots, llms, campaigns, single SITE_URL, freshness, no prices, no ratings, no banned claims, no third parties.')
+print(f'OK: {C["shortName"]} ({STATE}, version {C["version"]}): {len(pages)} pages on {SITE}. Metadata, assets, links, schema, FAQ text, sitemap, robots, llms, campaigns, single SITE_URL, freshness, no prices, no ratings, no banned claims, no third parties' + ('.' if STATE == 'live' else ', no unshipped claims.'))

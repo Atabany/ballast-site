@@ -8,18 +8,32 @@
 SITE_URL in _ops/discovery.json is the single source for every absolute URL. To move domain,
 change that one line and rebuild. Page text lives in _ops/content/*.html; nothing in the repo
 root is hand-edited. Standard library only, except --og (Chrome).
+
+RELEASE_STATE in _ops/discovery.json is the one switch between the two sites:
+
+    live       the full Ballast 1.1 site: _ops/content, _ops/live/assets
+    prelaunch  what is true of the app on the App Store today: _ops/content with the edits in
+               _ops/prelaunch_edits.py, whole pages from _ops/prelaunch/pages, facts from the
+               "prelaunch" block in discovery.json, and _ops/prelaunch/assets
+
+Icons, Open Graph images and app screenshots are state assets: the build installs the current
+state's set into assets/ and removes the other's, so 1.1 images are never served before release.
 """
 from datetime import date
 from pathlib import Path
 from urllib.parse import urlsplit
-import argparse, base64, hashlib, html, json, re, subprocess, sys, tempfile
+import argparse, base64, hashlib, html, json, re, shutil, subprocess, sys, tempfile
 
 OPS = Path(__file__).resolve().parent
 ROOT = OPS.parent
 sys.path.insert(0, str(OPS))
 import horizon  # noqa: E402
 
-C = json.loads((OPS / 'discovery.json').read_text())
+RAW = json.loads((OPS / 'discovery.json').read_text())
+STATE = RAW['RELEASE_STATE']
+assert STATE in ('prelaunch', 'live'), 'RELEASE_STATE must be prelaunch or live'
+C = {**{k: v for k, v in RAW.items() if k != 'prelaunch'}, **(RAW['prelaunch'] if STATE == 'prelaunch' else {})}
+STATE_ASSETS = OPS / STATE / 'assets'
 SITE = C['SITE_URL']
 assert SITE.startswith('https://') and SITE.endswith('/'), 'SITE_URL must be https and end in /'
 APP = C['appId']
@@ -66,10 +80,26 @@ def store_link(tag, cls='store'):
             f'<img class="badge" src="{BADGE}" alt="Download on the App Store" width="135" height="45"></a>')
 
 
+def page_source(name):
+    """A page's source for the current state. A failed edit stops the build, so the prelaunch
+    site can't quietly drift when the live copy it patches changes."""
+    if STATE == 'live':
+        return (OPS / 'content' / name).read_text()
+    whole = OPS / 'prelaunch/pages' / name
+    if whole.exists():
+        return whole.read_text()
+    import prelaunch_edits
+    s = (OPS / 'content' / name).read_text()
+    for old, new in prelaunch_edits.EDITS.get(name, []):
+        assert s.count(old) == 1, f'{name}: prelaunch edit matches {s.count(old)} times: {old[:70]}'
+        s = s.replace(old, new)
+    return s
+
+
 def load_pages():
     pages = []
     for path in sorted((OPS / 'content').glob('*.html')):
-        s = path.read_text()
+        s = page_source(path.name)
         m = re.match(r'<!--meta\s*(\{.*?\})\s*-->\s*', s, re.S)
         assert m, f'{path.name}: missing meta block'
         meta = json.loads(m[1])
@@ -97,11 +127,15 @@ def faq_pairs(body):
 
 def slot(name, theme, alt, kind='shot'):
     for ext in ('.jpg', '.png'):
-        f = ROOT / 'assets/screens' / (name + ext)
+        f = STATE_ASSETS / 'screens' / (name + ext)
         if f.exists():
             w, h = image_size(f)
             return f'<figure class="shot"><img src="assets/screens/{name}{ext}" width="{w}" height="{h}" alt="{E(alt)}" loading="lazy" decoding="async"></figure>'
-    return f'<!-- slot:{name} --><div class="panel"><img src="assets/horizon-{theme}.svg" width="800" height="500" alt="" loading="lazy" decoding="async"></div>'
+    return f'<!-- slot:{name} -->{panel(theme)}'
+
+
+def panel(theme):
+    return f'<div class="panel"><img src="assets/horizon-{theme}.svg" width="800" height="500" alt="" loading="lazy" decoding="async"></div>'
 
 
 def image_size(path):
@@ -137,6 +171,7 @@ def expand(body, page):
     body = re.sub(r'\{\{store\}\}', lambda _: store_link(tag), body)
     body = re.sub(r'\{\{cta\|(.*?)\|(.*?)\}\}', lambda m: f'<aside class="cta"><h2 class="cta-title">{m[1]}</h2><p>{m[2]}</p>{store_link(tag)}</aside>', body, flags=re.S)
     body = re.sub(r'\{\{slot\|(.*?)\|(.*?)\|(.*?)\}\}', lambda m: slot(m[1], m[2], m[3]), body)
+    body = re.sub(r'\{\{panel\|(\w+)\}\}', lambda m: panel(m[1]), body)
     return body.strip()
 
 
@@ -277,7 +312,7 @@ def write_support_files(pages, out):
     head_txt = f'# {C["storeName"]}\n\n> {C["promise"]} Official website by {C["author"]}.\n\n{C["facts"]}\n\nApp Store listing: {store}\nFacts checked: {C["factsChecked"]}\n'
     tail = '\nThis file is a plain reference for readers and assistants. It does not establish search ranking or AI recommendations.\n'
     (out / 'llms.txt').write_text(head_txt + '\n## Pages\n\n' + lines(core, False) + '\n\n## Guides and tools\n\n' + lines(guides, False) + '\n' + tail)
-    full = (OPS / 'llms-product.md').read_text().strip()
+    full = (OPS / ('llms-product.md' if STATE == 'live' else 'prelaunch/llms-product.md')).read_text().strip()
     (out / 'llms-full.txt').write_text(head_txt + '\n' + full + '\n\n## Pages\n\n' + lines(core, True) + '\n\n## Guides and tools\n\n' + lines(guides, True) + '\n' + tail)
 
 
@@ -289,11 +324,29 @@ def write_art(out):
     (art / 'horizon-band.svg').write_text(horizon.scene(1600, 160, 'dawn', horizon=0.40, sun_x=None))
 
 
-def make_og(pages, out):
-    target = out / 'assets/og'
+def install_state_assets(out):
+    """Put this state's icons, Open Graph images and screenshots in assets/, and nothing of the other's."""
+    for base in (OPS / 'live/assets', OPS / 'prelaunch/assets'):
+        for f in base.rglob('*'):
+            target = out / 'assets' / f.relative_to(base)
+            if f.is_file() and target.is_file():
+                target.unlink()
+    for name in ('screens', 'og'):
+        folder = out / 'assets' / name
+        if folder.is_dir() and not any(folder.iterdir()):
+            folder.rmdir()
+    for f in STATE_ASSETS.rglob('*'):
+        if f.is_file():
+            target = out / 'assets' / f.relative_to(STATE_ASSETS)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(f, target)
+
+
+def make_og(pages):
+    target = STATE_ASSETS / 'og'
     target.mkdir(parents=True, exist_ok=True)
     css = 'html,body{margin:0;background:#120E17}.w{position:relative;width:1200px;height:630px;overflow:hidden}svg{position:absolute;left:0;bottom:0}.t{position:absolute;left:72px;right:72px;top:64px;color:#F6EFE9;font:500 66px/1.1 "New York","Iowan Old Style",Georgia,serif;letter-spacing:-.01em}.b{position:absolute;left:72px;bottom:46px;color:#F6EFE9;font:600 28px -apple-system,sans-serif;letter-spacing:.02em;display:flex;align-items:center;gap:14px}.b img{width:56px;height:56px;border-radius:13px}'
-    icon = 'data:image/png;base64,' + base64.b64encode((ROOT / 'assets/icon-112.png').read_bytes()).decode()
+    icon = 'data:image/png;base64,' + base64.b64encode((STATE_ASSETS / 'icon-112.png').read_bytes()).decode()
     with tempfile.TemporaryDirectory() as tmp:
         for p in pages:
             stem = Path(p['file']).stem
@@ -330,8 +383,9 @@ def main():
     write_support_files(pages, out)
     write_art(out)
     if a.og:
-        make_og(pages, out)
-    print(f'Built {len(pages)} pages for {SITE} into {out}')
+        make_og(pages)
+    install_state_assets(out)
+    print(f'Built {len(pages)} pages ({STATE}) for {SITE} into {out}')
 
 
 if __name__ == '__main__':

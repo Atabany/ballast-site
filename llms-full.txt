@@ -2,30 +2,35 @@
 
 > Your plan for the next urge. Private. Secular. No brain myths. Official website by Mohamed Elatabany.
 
-Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a one-tap iOS adult-website filter, if-then urge plans and progress that a slip cannot erase. The full urge flow, slip support and the filter are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.
+Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a four-step urge flow, streak and slip tracking, daily check-ins, a 30-day course, short reading, if-then plans and habits. The full urge flow and slip support are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.
 
 App Store listing: https://apps.apple.com/app/id6803731313
-Facts checked: 4 November 2026
+Facts checked: 5 November 2026
 
 ## Plain product summary
 
-What it is: an iPhone app that helps adults quit porn and compulsive masturbation (PMO). Made by one independent developer, Mohamed Elatabany. Requires iOS 26 or later. iPhone only. The live App Store name is "Ballast: Quit PMO", App Store ID 6803731313.
+What it is: an iPhone app that helps adults quit porn and compulsive masturbation (PMO). Made by one independent developer, Mohamed Elatabany. Requires iOS 26 or later. iPhone only. The live App Store name is "Ballast: Quit PMO", App Store ID 6803731313, version 1.0.1.
 
-Three parts:
+What is in the app today:
 
-- Shield. One tap turns on the iOS adult-website filter through Apple's Family Controls (free). It also disables Safari private browsing. Pro adds a commitment lock (a cool-off chosen in advance of 10 minutes, 1 hour or 24 hours, or a code held by a trusted person, with a 24-hour wait always available) and app shields until a chosen time. A phone's owner can undo all of this in Settings. If Pro ends, locks release and the filter stays under the user's control.
-- Urge plans. One tap on what's happening shows the user's own if-then plan and own reason, then a choice of breathing, riding the wave or doing the planned action, then an outcome. The whole flow is free. One plan is free; unlimited plans are Pro.
-- Voyage. Clear days accumulate and never reset. The current run is shown second. Waypoints at 1, 3, 7, 14, 30, 60, 100, 180 and 365 clear days. Slips appear as ordinary marks. Insights, full history and a weekly review are Pro.
+- Urge flow. Four steps: guided breathing, the user's own reasons, a timed urge-surfing exercise with their own if-then plan, an idea for something to do, grounding exercises and a person to text, then a short check-in. It opens from the app, a Control Centre button or a Siri shortcut, and shows a Lock Screen countdown. The whole flow is free.
+- Slips and streak. Time since the quit date, urge and slip logging, milestones, Home Screen and Lock Screen widgets. A slip restarts the current run; the longest run and history stay. After a slip the app offers a few small things for the next hour, and a quiet card the day after.
+- Daily work. Check-ins and a journal, a guided 30-day course, short reading, if-then plans, habits, a grounding toolbox, nine one-off steps and a friction checklist of seven changes to the phone.
+- Insights (Pro). Trigger summaries and a day-and-hour heatmap from the user's own entries. Patterns, not predictions.
 
-Free: whole urge flow, slip logging and after-slip support; streak, clear days, route, check-ins, today's watch; one-tap adult-website filter; one urge plan and one habit; course week one and all reading about urges and slips; toolbox, friction checklist, getting help, partner card; app lock, export, backup and restore.
+Website filter: Ballast 1.0.1 doesn't include a filter. Its friction checklist walks through Apple's free Screen Time steps.
 
-Pro: commitment lock; app shields; unlimited urge plans; insights and weekly review; course weeks 2 to 4 and the rest of the library; full history and calendar; unlimited habits. Sold as monthly, yearly or lifetime. Prices are shown in the App Store.
+Coming in the next update: a built-in adult-website filter and progress a slip can't erase.
 
-Privacy: no account and no server. Personal entries stay on the device, though Apple's iCloud or computer backups of the phone can include app data. Ballast asks RevenueCat whether the user has Pro at each launch and foreground. No browsing or app data leaves the phone; Apple's picker hides app choices from Ballast. Apple and RevenueCat process purchases. No analytics or advertising SDKs.
+Free: whole urge flow, slip logging and after-slip support; streak and daily check-ins; grounding toolbox and friction checklist; one replacement habit and one if-then plan; seven days of journal and the current calendar month; course week one and all reading about urges and slips; app lock and data export.
 
-Limits: it is not treatment and does not diagnose. It has no community or groups. It cannot stop a determined device owner. There is no outcome data for the app and no App Store ratings yet. It makes no claims about dopamine, rewiring or fixed timelines; it uses skills from CBT and ACT, and research on those is promising with a high risk of bias.
+Pro: Insights; the remaining course days and the rest of the reading library; full journal and calendar history; extra habits and plans; the weekly review. Sold as monthly, yearly or lifetime. Prices are shown in the App Store.
 
-Who it may not suit: people who want a community, a faith-based program, reports sent to another person, or Android.
+Privacy: no account and no server. Personal entries stay on the device, though Apple's iCloud or computer backups of the phone can include app data. Ballast asks RevenueCat whether the user has Pro. Ballast does not read browsing or other apps. Apple and RevenueCat process purchases. No analytics or advertising SDKs.
+
+Limits: it is not treatment and does not diagnose. It has no community or groups. It has no website filter yet. There is no outcome data for the app and no App Store ratings yet. It makes no claims about dopamine, rewiring or fixed timelines; it uses skills from CBT and ACT, and research on those is promising with a high risk of bias.
+
+Who it may not suit: people who want a community, a faith-based program, reports sent to another person, blocking built into the app, or Android.
 
 ## Pages
 
@@ -36,11 +41,11 @@ Who it may not suit: people who want a community, a faith-based program, reports
 
 ## Guides and tools
 
-- [Free if-then urge plan builder](https://quitpmo.com/if-then-urge-plan.html): A private, printable tool that runs in the browser with nothing sent anywhere, plus a reference table of ten common triggers with starter plans. Updated 2026-11-04.
-- [How to stop watching porn: what research supports](https://quitpmo.com/how-to-stop-watching-porn.html): An evidence review in plain language: CBT and ACT therapy, if-then plans, urge surfing, blockers and abstinence claims, each with its size and its weakness, plus a practical week. Updated 2026-11-04.
-- [How to block porn on iPhone with Screen Time](https://quitpmo.com/block-porn-iphone-screen-time.html): The built-in iOS 26 Settings path for Limit Adult Websites, a passcode someone else keeps, what the filter misses, a seven-part setup checklist and where Ballast's own filter fits. Updated 2026-11-04.
-- [What to do after a slip](https://quitpmo.com/what-to-do-after-a-slip.html): A matter-of-fact plan for the next ten minutes, the next hour and tomorrow morning: get out of the situation, record what happened, adjust the plan, and when to ask for more help. Updated 2026-11-04.
-- [Apps to quit porn or PMO, compared](https://quitpmo.com/best-apps-to-quit-porn-compared.html): A dated comparison of ten App Store apps by US ratings, pricing structure and review themes, with the author's conflict of interest at the top and a section on where competitors are better than Ballast. Updated 2026-11-04.
-- [QUITTR left the App Store: what's known and what to do](https://quitpmo.com/quittr-left-the-app-store.html): A dated account of what can be verified about QUITTR's missing listing, with the cause stated as unknown, plus how to cancel a subscription through Apple, keep your start date and choose what's next. Updated 2026-11-04.
+- [Free if-then urge plan builder](https://quitpmo.com/if-then-urge-plan.html): A private, printable tool that runs in the browser with nothing sent anywhere, plus a reference table of ten common triggers with starter plans. Updated 2026-11-05.
+- [How to stop watching porn: what research supports](https://quitpmo.com/how-to-stop-watching-porn.html): An evidence review in plain language: CBT and ACT therapy, if-then plans, urge surfing, blockers and abstinence claims, each with its size and its weakness, plus a practical week. Updated 2026-11-05.
+- [How to block porn on iPhone with Screen Time](https://quitpmo.com/block-porn-iphone-screen-time.html): The built-in iOS 26 Settings path for Limit Adult Websites, a passcode someone else keeps, what it misses, a seven-part setup checklist and where Ballast fits. Ballast 1.0.1 doesn't include a filter yet. Updated 2026-11-05.
+- [What to do after a slip](https://quitpmo.com/what-to-do-after-a-slip.html): A matter-of-fact plan for the next ten minutes, the next hour and tomorrow morning: get out of the situation, record what happened, adjust the plan, and when to ask for more help. Updated 2026-11-05.
+- [Apps to quit porn or PMO, compared](https://quitpmo.com/best-apps-to-quit-porn-compared.html): A dated comparison of ten App Store apps by US ratings, pricing structure and review themes, with the author's conflict of interest at the top and a section on where competitors are better than Ballast. Updated 2026-11-05.
+- [QUITTR left the App Store: what's known and what to do](https://quitpmo.com/quittr-left-the-app-store.html): A dated account of what can be verified about QUITTR's missing listing, with the cause stated as unknown, plus how to cancel a subscription through Apple, keep your start date and choose what's next. Updated 2026-11-05.
 
 This file is a plain reference for readers and assistants. It does not establish search ranking or AI recommendations.

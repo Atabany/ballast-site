@@ -1,4 +1,5 @@
 {
+  "RELEASE_STATE": "prelaunch",
   "SITE_URL": "https://quitpmo.com/",
   "appId": "6803731313",
   "providerToken": "127826363",
@@ -12,5 +13,10 @@
   "contact": "atabany.apps@gmail.com",
   "promise": "Your plan for the next urge. Private. Secular. No brain myths.",
   "facts": "Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a one-tap iOS adult-website filter, if-then urge plans and progress that a slip cannot erase. The full urge flow, slip support and the filter are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.",
-  "factsChecked": "4 November 2026"
+  "factsChecked": "4 November 2026",
+  "prelaunch": {
+    "version": "1.0.1",
+    "facts": "Ballast is an on-device iPhone app (iOS 26 or later) for adults who want to quit porn and compulsive masturbation (PMO). It offers a four-step urge flow, streak and slip tracking, daily check-ins, a 30-day course, short reading, if-then plans and habits. The full urge flow and slip support are free. There is no account and no server. Personal entries stay on device; Apple and RevenueCat process purchases. It uses skills from CBT and ACT. It is not treatment.",
+    "factsChecked": "5 November 2026"
+  }
 }
