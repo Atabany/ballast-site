@@ -7,7 +7,23 @@ the page back and publish the rest.
 Rules: the cause is stated as unknown. Make no accusation. Attribute every claim. Keep the conflict
 of interest at the top. Do not imply a link between the 404 Media reporting and the listing.
 
-## Last recheck: 5 November 2026
+## Last recheck: 8 November 2026
+
+Done with curl only. Nothing material changed, so the page changed only its dates and the AppGoblin row's crawl date.
+
+| Item | Result |
+|---|---|
+| Lookup and listing, six storefronts | `resultCount` 0 and HTTP 404 in US, GB, CA, AU, DE, AE. A US App Store search for "quittr" shows no QUITTR listing |
+| quittrapp.com | Online. Home and support pages still carry no statement about the listing; home still links to the App Store listings and the Google Play page, which also returns 404 |
+| News | Google News RSS for "QUITTR app App Store removed", "Quittr" and "Quittr Apple" over 45 days: nothing about the listing |
+| Social accounts | **Not read**, as before |
+| 404 Media, March and April 2026 | Both still up, no visible update or correction. Public parts still match. Paid parts still unread |
+| AppGoblin | Still "This app was removed from the US App Store and is no longer live"; last crawled now 2026-11-05. Row date moved to 5 Nov |
+| Pledgely | Unchanged, still "Updated October 30, 2026" |
+| Apple cancel and refund guides | Steps still match |
+| Google Play help | Still resolves and says the same |
+
+## Previous recheck: 5 November 2026
 
 | Item | Result |
 |---|---|

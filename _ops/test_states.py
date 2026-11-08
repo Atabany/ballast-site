@@ -18,6 +18,12 @@ INTENDED = {
     'quittr-left-the-app-store.html',   # The recheck and rewording apply to both states.
     'llms-full.txt',                    # Carries that page's updated date.
     'sitemap.xml',                      # Same.
+    # Release day, 8 November 2026: the mock Shield shot was deleted, so these two pages show the
+    # abstract panel in its slot, and the privacy page caught up with the app's own policy.
+    'index.html',
+    'block-porn-iphone-screen-time.html',
+    'privacy.html',
+    'assets/screens/ballast-shield-filter-and-commitment-lock-iphone.jpg',
 }
 KEY = re.compile(r'[0-9a-f]{32}\.txt')  # The IndexNow key file is new and belongs in both states.
 NOT_SERVED = ('_ops/', '_config.yml', 'README.md', '.gitignore', '.git')

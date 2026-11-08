@@ -27,6 +27,6 @@ Launch arguments are in `CLAUDE.md` and `docs/kb/simulator-and-debug.md` of the 
 | `ballast-after-slip-next-hour-support-iphone.jpg` | After a slip | After-slip screen, "The next hour" |
 | `ballast-plan-tab-my-urge-plans-iphone.jpg` | Plan builder | Plan tab, list of urge plans by trigger |
 
-All five are installed, from `quitPorn-next/marketing/site-screens`. **The Shield screen is mock output** (`MockShield`, on a simulator): `PUBLISH_CHECKLIST.md` has the step that clears it. The Plan screen is the Urge plans page, one tap from the Plan tab, because that's where the list by trigger is.
+Four are installed, from `quitPorn-next/marketing/site-screens` (the v1.1.0 release build). **The Shield slot is empty on purpose:** the only capture was mock output (`MockShield`, on a simulator), so it was deleted on 8 November 2026 and the Home and Screen Time guide slots show the abstract panel. Add a Shield shot only from a real device. The Plan screen is the Urge plans page, one tap from the Plan tab, because that's where the list by trigger is.
 
 The home hero is the loop from the same folder (`assets/ballast-horizon-hero-loop.mp4`, poster beside it), with `assets/hero-video.js` for the pause control. Under `prefers-reduced-motion` and Save-Data it stays on the poster.
