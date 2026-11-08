@@ -73,8 +73,25 @@ HELP = '''<section class="help">
 </section>'''
 
 
+# Custom Product Pages (App Store Connect, created 2026-11-08). Until a page is approved, Apple shows the
+# default product page for its ppid, so these links are safe before approval. ct keeps the campaign attribution.
+CPP_FILTER = '65a3645b-db29-4a09-84a7-61881d998113'
+CPP_URGE = 'b72291d5-44bd-4a11-895c-3f4d6c91a870'
+CPP_PRIVATE = 'ce9482be-63a2-4d56-bc4c-09aa4fda5504'
+PPID_FOR_TAG = {
+    'ballast-guide-block-porn': CPP_FILTER,
+    'ballast-compare-apps': CPP_FILTER,
+    'ballast-tool-urge-plan': CPP_URGE,
+    'ballast-guide-how-to-stop': CPP_URGE,
+    'ballast-guide-after-slip': CPP_URGE,
+    'ballast-guide-quittr': CPP_PRIVATE,
+}
+
+
 def store_url(tag):
-    return f'https://apps.apple.com/app/apple-store/id{APP}?pt={C["providerToken"]}&ct={tag}&mt=8'
+    url = f'https://apps.apple.com/app/apple-store/id{APP}?pt={C["providerToken"]}&ct={tag}&mt=8'
+    ppid = PPID_FOR_TAG.get(tag)
+    return f'{url}&ppid={ppid}' if ppid else url
 
 
 def store_link(tag, cls='store'):
