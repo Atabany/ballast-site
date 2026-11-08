@@ -16,6 +16,9 @@ RELEASE_STATE in _ops/discovery.json is the one switch between the two sites:
                _ops/prelaunch_edits.py, whole pages from _ops/prelaunch/pages, facts from the
                "prelaunch" block in discovery.json, and _ops/prelaunch/assets
 
+Ballast 1.1.0 went live on 7 November 2026. The prelaunch sources (_ops/prelaunch, prelaunch_edits.py,
+the "prelaunch" block and test_states.py) were removed on 8 November, so only live builds now.
+
 Icons, Open Graph images and app screenshots are state assets: the build installs the current
 state's set into assets/ and removes the other's, so 1.1 images are never served before release.
 """

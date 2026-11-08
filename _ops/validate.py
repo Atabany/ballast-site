@@ -238,7 +238,7 @@ if not (SITE.startswith('https://') and SITE.endswith('/')):
     errors.append('SITE_URL must be https and end in /')
 host = urlsplit(SITE).netloc
 for f in list((OPS / 'content').glob('*.html')) + list((OPS / 'prelaunch/pages').glob('*.html')) + [OPS / 'build.py', OPS / 'llms-product.md', OPS / 'prelaunch/llms-product.md']:
-    if 'github.io' in f.read_text():
+    if f.exists() and 'github.io' in f.read_text():  # The prelaunch sources were retired on 2026-11-08.
         errors.append(f.name + ': hard-codes a github.io URL; use relative links or SITE_URL')
 with tempfile.TemporaryDirectory() as tmp:
     subprocess.run([sys.executable, str(OPS / 'build.py'), '--out', tmp], check=True, capture_output=True)

@@ -2,12 +2,12 @@
 
 Two stages. `RELEASE_STATE` in `_ops/discovery.json` is the one switch between them.
 
-- **`prelaunch`** (now): the site says only what's true of Ballast 1.0.1, the version on the App Store.
-- **`live`** (the day 1.1.0 is on the App Store): the full 1.1 site, from the same sources.
+- **`prelaunch`** (until 8 November 2026): the site said only what was true of Ballast 1.0.1.
+- **`live`** (now): the full 1.1 site. Ballast 1.1.0 went live on 7 November 2026, the site flipped on 8 November (`379cb32`), and the prelaunch sources, `prelaunch_edits.py`, the `prelaunch` block and `test_states.py` were removed. The stage 1 commands that use them no longer apply.
 
 Every step below is public or hard to undo, so each needs the owner's or the coordinator's go-ahead.
 
-## Stage 1: prelaunch now
+## Stage 1: prelaunch (history)
 
 Status on 2026-11-05: built and validated on branch `prelaunch`. Nothing pushed, and no DNS or GitHub setting changed.
 
@@ -67,18 +67,18 @@ These need a login, so the site carries no verification tokens.
 
 ## Stage 2: the day 1.1.0 is live
 
-Do these only once the App Store shows it: `curl -s "https://itunes.apple.com/lookup?id=6803731313&country=us" | python3 -c "import json,sys;r=json.load(sys.stdin)['results'][0];print(r['version'],r['userRatingCount'],r['trackName'])"`.
+Done on 8 November 2026, apart from the items marked open. Do these only once the App Store shows it: `curl -s "https://itunes.apple.com/lookup?id=6803731313&country=us" | python3 -c "import json,sys;r=json.load(sys.stdin)['results'][0];print(r['version'],r['userRatingCount'],r['trackName'])"`.
 
 ### Before flipping
 
-- [ ] The real Shield path has been run on a device. It can't be tested on a simulator, so `FamilyControlsShield` is unverified until then.
-- [ ] **Reshoot Shield from a real device.** `_ops/live/assets/screens/ballast-shield-filter-and-commitment-lock-iphone.jpg` is mock output. Replace it, or delete it so the slot falls back to the abstract panel.
-- [ ] Every other shot in `SCREENSHOTS_NEEDED.md` still matches the shipped build. Replace any that don't in `_ops/live/assets/screens/`.
-- [ ] `_ops/live/assets/` holds the icon that shipped. If it isn't what's on the App Store, regenerate the icon files there.
-- [ ] Every row in **Claims that wait for the App Store update** below is true of the shipped build.
-- [ ] Rating count re-read. If there are ratings, the comparison's "No ratings yet", the about page and `llms-product.md` must change. The site still shows no stars unless the count and rating are real.
-- [ ] `QUITTR_RECHECK.md` done again that day. Update `_ops/content/quittr-left-the-app-store.html`.
-- [ ] Privacy text in `_ops/content/privacy.html` still matches `docs/PRIVACY_POLICY.md` and `Services/Legal.swift` in the app repo.
+- [x] The real Shield path has been run on a device: the owner confirmed on an iPhone (2026-11-05) that the one-tap filter and an added site work. The commitment lock, its 24-hour path, app shields, a Pro lapse and a backup round trip have been checked in the v1.1.0 code only, not on a device.
+- [x] **Reshoot Shield from a real device.** The mock shot was deleted on 8 November, so the slot shows the abstract panel. Add a real-device capture whenever there is one.
+- [x] Every other shot in `SCREENSHOTS_NEEDED.md` still matches the shipped build. Replace any that don't in `_ops/live/assets/screens/`.
+- [x] `_ops/live/assets/` holds the icon that shipped (byte-identical to the v1.1.0 `AppIcon-1024.png`; matches the App Store artwork). If it isn't what's on the App Store, regenerate the icon files there.
+- [x] Every row in **Claims that wait for the App Store update** below is true of the shipped build's code.
+- [x] Rating count re-read: 0 on 8 November 2026. If there are ratings, the comparison's "No ratings yet", the about page and `llms-product.md` must change. The site still shows no stars unless the count and rating are real.
+- [x] `QUITTR_RECHECK.md` done again that day. Update `_ops/content/quittr-left-the-app-store.html`.
+- [x] Privacy text in `_ops/content/privacy.html` still matches `docs/PRIVACY_POLICY.md` and `Services/Legal.swift` in the app repo.
 
 ### Flip
 
@@ -98,14 +98,14 @@ The flip swaps icons and screenshots by itself: `build.py` installs `_ops/live/a
 - [ ] App Store Connect, in the next version: confirm the listing's Marketing, Support and Privacy Policy URLs are on `quitpmo.com`, and remove any `atabany.github.io` URL from the description. `Services/Legal.swift` also moves to the new URLs for the next build. Old builds keep working through the redirects.
 - [ ] Re-read the App Privacy label against the policy, now Family Controls has shipped.
 - [ ] Update `docs/kb/website.md` in the app repo.
-- [ ] Clean up: delete `_ops/prelaunch/`, `_ops/prelaunch_edits.py` and the `prelaunch` block in `discovery.json`. In `_ops/content/privacy.html`, the note about earlier versions stays.
+- [x] Clean up: delete `_ops/prelaunch/`, `_ops/prelaunch_edits.py` and the `prelaunch` block in `discovery.json`. In `_ops/content/privacy.html`, the note about earlier versions stays.
 - [ ] Dated baseline: App Store impressions, page views, downloads, web referrers. Baseline in `docs/REBUILD.md`: Aug 5 to Nov 2, 2026, 366 impressions, 38 page views, 11 downloads. Note 1.1 as a confounder.
 - [ ] Off-site (Reddit answers, list-author outreach, video): drafted for review; the owner posts. Weekly content routine and growth review: set up only once approved.
 - [ ] Optional: a qualified clinician reads `how-to-stop-watching-porn.html` and `what-to-do-after-a-slip.html`. Then the about page's sentence changes.
 
 ## Claims that wait for the App Store update
 
-All of these are true of the spec in `docs/REBUILD.md`, not of the live 1.0.1. None is verified on a shipped build. `validate.py` keeps them off the site in prelaunch.
+Checked on 8 November 2026 against the v1.1.0 source in `quitPorn-next` (tag `v1.1.0`): none is contradicted. On a device, only the filter and an added site have been seen working (owner, 2026-11-05).
 
 | Claim | Where (live state) | Check in the shipped build |
 |---|---|---|
