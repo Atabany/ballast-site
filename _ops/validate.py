@@ -391,7 +391,7 @@ for f in (ROOT / 'assets/screens').glob('*'):
 # The levels on the page are the levels the art is drawn from, and llms-full.txt says the same.
 home_text = norm(''.join(home.text)).replace('’', "'")
 for level, days, *_ in daybreak.LEVELS:
-    said = level + ('where everyone starts' if days == 0 else f'{days} day{"" if days == 1 else "s"} free')
+    said = level + f'{days} day{"" if days == 1 else "s"} free'
     if said not in home_text:
         errors.append(f'index.html: level {level} at {days} days free is missing')
     if not re.search(rf'{level} \({days}\b', llms_full):

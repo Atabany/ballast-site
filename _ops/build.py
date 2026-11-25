@@ -140,7 +140,7 @@ def light(level, size):
 def levels_list():
     """The ten levels, from the same data the art is drawn from."""
     def need(days):
-        return 'where everyone starts' if days == 0 else f'{days} day{"" if days == 1 else "s"} free'
+        return f'{days} day{"" if days == 1 else "s"} free'
     return '<ol class="levels">' + ''.join(
         f'<li><img src="assets/level-{name.lower()}.svg" alt="" width="84" height="84" loading="lazy" decoding="async"><span><strong>{name}</strong>{need(days)}</span></li>'
         for name, days, *_ in daybreak.LEVELS) + '</ol>'
