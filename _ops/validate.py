@@ -2,51 +2,27 @@
 """Validate the Ballast site. Must print OK before anything is published.
 
 Metadata, links, install paths, JSON-LD, FAQ text, sitemap and llms coverage, plus the product's
-rules: no prices, no invented ratings, no banned claims, no third-party requests, one SITE_URL.
-Stdlib only, no network. See _ops/linkcheck.py for live and external link checks.
+rules: no prices, no ratings, no banned claims, no third-party requests, one SITE_URL, and nothing
+left of the 1.x app (its tabs, words, versions or artwork). Stdlib only, no network. See
+_ops/linkcheck.py for live and external link checks.
 
-    python3 _ops/validate.py                 # the repo root, in its current RELEASE_STATE
-    python3 _ops/validate.py --state live    # build that state in a temporary copy and check it
-    python3 _ops/validate.py --both          # both states, in temporary copies
-
-In prelaunch it also fails on any claim of a feature the App Store version doesn't have, in HTML,
-JSON-LD, FAQ, Open Graph, sitemap and the llms files. The only exception is text inside
-<!--coming:start-->...<!--coming:end--> on the two pages allowed to have it, and the one labelled
-"Coming in the next update" line in llms-full.txt.
+    python3 _ops/validate.py
 """
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs, unquote
-import filecmp, html, json, re, shutil, struct, subprocess, sys, tempfile
+import filecmp, html, json, re, struct, subprocess, sys, tempfile
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 OPS = ROOT / '_ops'
 
 
-def validate_copy(state):
-    """Check a state without touching the working tree: temporary copy, flip, build, validate."""
-    with tempfile.TemporaryDirectory() as tmp:
-        copy = Path(tmp) / 'site'
-        shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns('.git', '__pycache__'))
-        conf = copy / '_ops/discovery.json'
-        raw = json.loads(conf.read_text())
-        raw['RELEASE_STATE'] = state
-        conf.write_text(json.dumps(raw, indent=2, ensure_ascii=False) + '\n')
-        subprocess.run([sys.executable, str(copy / '_ops/build.py')], check=True, capture_output=True)
-        run = subprocess.run([sys.executable, str(copy / '_ops/validate.py')], text=True, capture_output=True)
-        print(f'[{state}] ' + (run.stdout + run.stderr).strip())
-        return run.returncode
-
-
-if '--both' in sys.argv or '--state' in sys.argv:
-    states = ['prelaunch', 'live'] if '--both' in sys.argv else [sys.argv[sys.argv.index('--state') + 1]]
-    raise SystemExit(1 if any([validate_copy(s) for s in states]) else 0)
-
 sys.path.insert(0, str(OPS))
 import build  # noqa: E402
+import daybreak  # noqa: E402
 
-C, STATE = build.C, build.STATE
+C = build.C
 SITE = C['SITE_URL']
 APP = str(C['appId'])
 errors = []
@@ -66,53 +42,26 @@ MUST_STATE = {
     'quittr-left-the-app-store.html': ['The cause is unknown', 'Conflict of interest', 'I have no evidence connecting'],
     'best-apps-to-quit-porn-compared.html': ['Conflict of interest', 'Where other apps are better than Ballast', 'Community'],
     'about.html': ['Mohamed Elatabany', 'Ballast is not treatment', 'I am not a clinician'],
-    'privacy.html': ['Family Controls', 'stays on your phone', 'No browsing data reaches Ballast', 'No app data reaches Ballast'],
-    'block-porn-iphone-screen-time.html': ['Limit Adult Websites', 'disables Safari private browsing', "a phone's owner can undo it in Settings"],
+    'privacy.html': ['Family Controls', 'stays on your phone', 'No browsing data reaches Ballast', 'No app data reaches Ballast', 'The Blocker and Apple'],
+    'block-porn-iphone-screen-time.html': ['Limit Adult Websites', 'disables Safari private browsing', "a phone's owner can undo it in Settings", 'Blocker tab', 'There\'s no VPN', 'Cut the easy access'],
     'how-to-stop-watching-porn.html': ['risk of bias', 'Not tested on pornography'],
-    'what-to-do-after-a-slip.html': ['A slip is data', 'Clear days never reset'],
-    'index.html': ['Your plan for the next urge', 'Private. Secular. No brain myths.', 'Shield', 'Urge plans', 'Voyage', 'uses skills from CBT and ACT'],
+    'what-to-do-after-a-slip.html': ['A slip is data', 'Total days free never reset', 'a slip never takes away'],
+    'support.html': ['Restore purchase', 'Back up to a file', 'Export my data', 'a 24-hour wait always works', 'Turn off the filter', 'not treatment'],
+    'index.html': ['Your plan for the next urge', 'Private. Secular. No brain myths.', 'Panic', 'Progress', 'Toolkit', 'Blocker', 'uses skills from CBT and ACT',
+                   'Your streak restarts. Your level doesn\'t.', 'A slip is data, not a verdict', 'friction, not a wall', 'a 24-hour wait always works',
+                   "never asked to buy during an urge or after a slip", 'No account', 'no server'],
 }
-if STATE == 'prelaunch':
-    MUST_STATE.update({
-        'privacy.html': ['covers every version of Ballast', 'stays on your phone', 'rated 17+', 'Version 1.1 and later', 'From version 1.1', 'Family Controls', 'No browsing data reaches Ballast', 'No app data reaches Ballast'],
-        'block-porn-iphone-screen-time.html': ['Limit Adult Websites', "Ballast 1.0.1 doesn't include a filter yet", "a phone's owner can undo Screen Time settings"],
-        'what-to-do-after-a-slip.html': ['A slip is data', 'Your current run restarts'],
-        'best-apps-to-quit-porn-compared.html': ['Conflict of interest', 'Where other apps are better than Ballast', 'Community', 'No website filter in version 1.0.1'],
-        'support.html': ['Not in version 1.0.1', 'Export my data', 'Restore purchase'],
-        'index.html': ['Your plan for the next urge', 'Private. Secular. No brain myths.', "Coming in the next update: a built-in adult-website filter and progress a slip can't erase.", 'uses skills from CBT and ACT', 'Insights', 'Ballast 1.0.1'],
-    })
-
-# Prelaunch: features the App Store version doesn't have. Any match outside a coming block fails.
-UNSHIPPED = [r'shield\w*', r'commitment[- ]lock\w*', r'voyage\w*', r'clear[- ]days?', r'waypoints?', r'cool[- ]off', r'trusted[- ]person', r'sites you add',
-             r'family controls', r'managed ?settings', r'blockedbyfilter', r'backup and restore', r'back up and restore', r'backup files?', r'one[- ]tap', r"today's watch",
-             r'plan tab', r'never resets?', r"(?:progress|days?) (?:that )?a slip can'?t erase", r'unlimited (?:urge )?plans', r'free filter', r'filter and (?:the |a )?(?:free )?urge flow',
-             r"tap what's happening", r'ballast 1\.1', r'version 1\.1(?:\.0)?', r'1\.1\.0', r'assets/screens']
-UNSHIPPED_RE = re.compile(r'(?<![\w-])(?:' + '|'.join(UNSHIPPED) + r')(?![\w])', re.I)
-COMING_RE = re.compile(r'<!--coming:start-->(.*?)<!--coming:end-->', re.S)
-COMING_LINE = "Coming in the next update: a built-in adult-website filter and progress a slip can't erase."
-DATE_WORDS = re.compile(r'\b(?:20\d\d|soon|shortly|weeks?|months?|january|february|march|april|june|july|august|september|october|november|december|q[1-4])\b', re.I)
-NEGATED = re.compile(r"\b(?:doesn't|does not|has no|have no|no website filter|no filter|not in|isn't)\b", re.I)
-APP_REF = re.compile(r'\b(?:Ballast\w*|this app|in-app)\b', re.I)
-BLOCK_WORD = re.compile(r'\bfilter\w*|\bblock(?:s|ing)? (?:websites|sites|porn|adult)', re.I)
-BACKUP_WORD = re.compile(r'\bbackups?\b|\bback up\b|\brestor\w+', re.I)
-BACKUP_OK = re.compile(r'iCloud|computer|Mac\b|device|Apple|purchase|paywall|\bPro\b', re.I)
-
-
-def sentences(text):
-    return [s.strip() for s in re.split(r'(?<=[.!?;])\s+|\n+', text) if s.strip()]
-
-
-def unshipped_claims(where, text, plain_text=None):
-    """Hard terms anywhere in the text, then sentence rules: Ballast with a filter must be negated."""
-    found = [f'{where}: unshipped claim "{m[0]}" in ...{norm(text[max(0, m.start() - 50):m.end() + 40])}...' for m in UNSHIPPED_RE.finditer(text)]
-    for s in sentences(plain_text if plain_text is not None else text):
-        if s.endswith('?'):
-            continue
-        if BLOCK_WORD.search(s) and APP_REF.search(s) and not NEGATED.search(s):
-            found.append(f'{where}: unshipped claim, Ballast with a filter or blocking: {s[:160]}')
-        if BACKUP_WORD.search(s) and not BACKUP_OK.search(s):
-            found.append(f'{where}: unshipped claim, backup or restore: {s[:160]}')
-    return found
+# The free/Pro line, as the app draws it (Services/FreeTier.swift). Home and llms-full.txt must both carry it.
+FREE_FACTS = ['3 sites of your own', 'up to 25', 'One if-then plan', 'one habit', 'week one', 'weeks 2 to 4', 'a week of journal', 'backup and restore', 'the heads-up', 'Unlimited if-then plans', 'weekly review', 'commitment lock', 'blocked apps', 'insights']
+# The 1.x app: its tabs, words, versions and look. Allowed only inside <!--earlier:start-->...<!--earlier:end-->,
+# on the privacy page (which covers every version), and where a page quotes someone else.
+OLD = [r'voyages?', r'shield\w*', r'clear[- ]days?', r'waypoints?', r'sail(?:ed|ing|s)?', r'horizon\w*', r'swells?', r"today's watch", r'today tab', r'plan tab', r'urge tab', r'current run',
+       r'on your route', r'friction checklist', r'(?:ballast|version) 1\.[0-3](?:\.\d+)?', r'1\.[0-3]\.\d+', r'app shields?']
+OLD_RE = re.compile(r'(?<![\w-])(?:' + '|'.join(OLD) + r')(?![\w])', re.I)
+EARLIER_RE = re.compile(r'<!--earlier:start-->.*?<!--earlier:end-->', re.S)
+RATING_STATE_RE = re.compile(r'\b(?:no|one|its first|only) (?:App Store |US )?ratings? (?:yet|so far)\b|\b(?:has|have) no (?:App Store )?ratings\b|\bNo ratings\b|\bfive[- ]star\b', re.I)
+HOME_BUDGET = 2_000_000
+FILM_BUDGET = 1_500_000
 
 
 def json_strings(value):
@@ -121,7 +70,6 @@ def json_strings(value):
     if isinstance(value, dict):
         value = list(value.values())
     return [s for v in value for s in json_strings(v)] if isinstance(value, list) else []
-
 
 
 class Page(HTMLParser):
@@ -237,8 +185,8 @@ indexable = [n for n in pages if metas.get(n, {}).get('kind') != '404']
 if not (SITE.startswith('https://') and SITE.endswith('/')):
     errors.append('SITE_URL must be https and end in /')
 host = urlsplit(SITE).netloc
-for f in list((OPS / 'content').glob('*.html')) + list((OPS / 'prelaunch/pages').glob('*.html')) + [OPS / 'build.py', OPS / 'llms-product.md', OPS / 'prelaunch/llms-product.md']:
-    if f.exists() and 'github.io' in f.read_text():  # The prelaunch sources were retired on 2026-11-08.
+for f in list((OPS / 'content').glob('*.html')) + [OPS / 'build.py', OPS / 'llms-product.md']:
+    if 'github.io' in f.read_text():
         errors.append(f.name + ': hard-codes a github.io URL; use relative links or SITE_URL')
 with tempfile.TemporaryDirectory() as tmp:
     subprocess.run([sys.executable, str(OPS / 'build.py'), '--out', tmp], check=True, capture_output=True)
@@ -272,9 +220,11 @@ llms, llms_full = (ROOT / 'llms.txt').read_text(), (ROOT / 'llms-full.txt').read
 for ref_name, ref in [('llms.txt', llms), ('llms-full.txt', llms_full)]:
     if C['facts'] not in ref:
         errors.append(ref_name + ': missing the fact block')
-    for bad in (PRICE_RE.search(ref), RATING_RE.search(ref)):
+    for bad in (PRICE_RE.search(ref), RATING_RE.search(ref), RATING_STATE_RE.search(ref)):
         if bad:
             errors.append(ref_name + ': price or rating text: ' + bad[0])
+    for m in OLD_RE.finditer(ref):
+        errors.append(f'{ref_name}: 1.x word: "{m[0]}" in ...{norm(ref[max(0, m.start() - 40):m.end() + 30])}...')
     for n in indexable:
         if '(' + url_for(n) + ')' not in ref:
             errors.append(ref_name + ': missing ' + n)
@@ -367,7 +317,7 @@ for name, p in pages.items():
     for m in BANNED_RE.finditer(source):
         errors.append(f'{name}: banned word outside a quoted section: "{m[0]}" in ...{norm(source[max(0, m.start() - 40):m.end() + 30])}...')
     combined = text + ' ' + p.title + ' ' + ' '.join(p.meta.get('description', []))
-    for rx, why in [(PRICE_RE, 'price'), (RATING_RE, 'star rating')]:
+    for rx, why in [(PRICE_RE, 'price'), (RATING_RE, 'star rating'), (RATING_STATE_RE, 'rating statement')]:
         m = rx.search(combined)
         if m:
             errors.append(f'{name}: {why} text: {m[0]}')
@@ -377,27 +327,20 @@ for name, p in pages.items():
         require(norm(phrase) in text.replace('’', "'"), 'must state: ' + phrase)
     for slot in re.findall(r'<!-- slot:([\w-]+) -->', raw):
         slots_used.add(slot)
-    if STATE == 'prelaunch':
-        coming = COMING_RE.findall(raw)
-        if coming:
-            require(name in ('index.html', 'privacy.html') and len(coming) == 1, 'a coming block belongs once on the home and privacy pages only')
-            if name == 'index.html':
-                require(COMING_LINE in norm(html.unescape(re.sub(r'<[^>]+>', '', coming[0]))), 'the coming note must say exactly: ' + COMING_LINE)
-                require(not DATE_WORDS.search(re.sub(r'<[^>]+>', ' ', coming[0])), 'the coming note must carry no date')
-            if name == 'privacy.html':
-                require('Version 1.1 and later' in coming[0] and 'From version 1.1' in coming[0], 'the 1.1 privacy section must be labelled')
-        kept = COMING_RE.sub(' ', raw)
-        if name == 'privacy.html':
-            kept = kept.replace('Version 1.1 and later', ' ')  # The label pointing at the coming section.
-        visible = re.sub(r'(?s)<!--.*?-->|<head>.*?</head>|<nav class="crumbs".*?</nav>', ' ', kept)
-        visible = html.unescape(re.sub(r'<[^>]+>', ' ', re.sub(r'</(?:li|p|td|th|h\d|div|tr|ul|ol|caption)>', '\n', visible)))
-        extras = ' \n'.join(json_strings(p.schema) + [v for k, vs in p.meta.items() if k != 'Content-Security-Policy' for v in vs] + [p.title])
-        errors.extend(unshipped_claims(name, html.unescape(kept), visible + ' \n' + extras))
-        require('<!-- slot:' not in raw, 'no screenshot slots before release: use {{panel|theme}}')
+    if name != 'privacy.html':
+        kept = EARLIER_RE.sub(' ', re.sub(r'(?s)<!--quoted:start-->.*?<!--quoted:end-->', ' ', raw))
+        seen = html.unescape(re.sub(r'(?s)<script.*?</script>|<!--.*?-->|<[^>]+>', ' ', kept)) + ' ' + ' '.join(i.get('alt', '') for i in p.images)
+        extras = ' '.join(json_strings(p.schema) + [v for vs in p.meta.values() for v in vs] + [p.title])
+        for m in OLD_RE.finditer(seen + ' ' + extras):
+            around = (seen + ' ' + extras)[max(0, m.start() - 40):m.end() + 30]
+            errors.append(f'{name}: 1.x word outside an earlier section: "{m[0]}" in ...{norm(around)}...')
+    require('horizon' not in raw.lower() or name == 'privacy.html', 'old artwork or words: horizon')
     for img in p.images:
         if 'assets/screens/' in img.get('src', ''):
             slots_used.add(Path(img['src']).stem)
-            require(len(img.get('alt', '')) > 20, 'real screenshot needs descriptive alt')
+            require(len(img.get('alt', '')) > 60, 'real screenshot needs descriptive alt')
+            require(img.get('loading') == 'lazy', 'screenshots load lazily')
+            require('filter-on' not in img['src'] and 'blocker-on' not in img['src'], 'a Blocker shot with the filter on must come from a real device (SCREENSHOTS_NEEDED.md)')
     # Schema.
     types = {x.get('@type') for x in p.schema}
     faq = next((x for x in p.schema if x.get('@type') == 'FAQPage'), None)
@@ -436,41 +379,54 @@ for n, m in metas.items():
             errors.append(n + ': not linked from the home page')
         if n not in pages['support.html'].links:
             errors.append(n + ': not linked from the support page')
-if STATE == 'live':
-    for slot in slots_used:
-        if slot not in needed:
-            errors.append(f'Screenshot slot {slot} is not listed in _ops/SCREENSHOTS_NEEDED.md')
-    for n in re.findall(r'`(ballast-[\w-]+)\.(?:jpg|png)`', needed):
-        if n not in slots_used:
-            errors.append(f'SCREENSHOTS_NEEDED.md lists {n}, which no page uses')
-else:
-    # Files at the root are public whether or not a page links them.
-    if (ROOT / 'assets/screens').exists():
-        errors.append('assets/screens must not exist before release: 1.1 screens would be public')
-    for f in (OPS / 'live/assets').glob('*.png'):
-        target = ROOT / 'assets' / f.name
-        if target.exists() and filecmp.cmp(f, target, shallow=False):
-            errors.append(f'assets/{f.name} is the 1.1 icon, not the one on the App Store today')
-    for ref in ['llms.txt', 'llms-full.txt', 'sitemap.xml', 'robots.txt']:
-        body = (ROOT / ref).read_text()
-        if ref == 'llms-full.txt' and body.count(COMING_LINE) != 1:
-            errors.append('llms-full.txt: needs the labelled coming line once')
-        body = body.replace(COMING_LINE, ' ')
-        errors.extend(unshipped_claims(ref, body, re.sub(r'\[[^\]]*\]\([^)]*\)', ' ', body)))
-    if COMING_LINE in llms:
-        errors.append('llms.txt: the coming line belongs only in llms-full.txt')
+for slot in slots_used:
+    if slot not in needed:
+        errors.append(f'Screenshot slot {slot} is not listed in _ops/SCREENSHOTS_NEEDED.md')
+for n in re.findall(r'`(ballast-[\w-]+-iphone)\.(?:jpg|png)`', needed):
+    if n not in slots_used:
+        errors.append(f'SCREENSHOTS_NEEDED.md lists {n}, which no page uses')
+for f in (ROOT / 'assets/screens').glob('*'):
+    if f.stem not in slots_used:
+        errors.append(f'assets/screens/{f.name} is used by no page')
+# The levels on the page are the levels the art is drawn from, and llms-full.txt says the same.
+home_text = norm(''.join(home.text)).replace('’', "'")
+for level, days, *_ in daybreak.LEVELS:
+    said = level + ('where everyone starts' if days == 0 else f'{days} day{"" if days == 1 else "s"} free')
+    if said not in home_text:
+        errors.append(f'index.html: level {level} at {days} days free is missing')
+    if not re.search(rf'{level} \({days}\b', llms_full):
+        errors.append(f'llms-full.txt: level {level} ({days}) is missing')
+for fact in FREE_FACTS:
+    for where, body in [('index.html', home_text), ('llms-full.txt', llms_full)]:
+        if fact.lower() not in body.lower():
+            errors.append(f'{where}: free/Pro fact missing: {fact}')
+if C['version'] not in llms_full:
+    errors.append('llms-full.txt: does not name version ' + C['version'])
+if f"Version {'.'.join(C['version'].split('.')[:2])}," not in home_text:
+    errors.append("index.html: the what's-new section does not name version " + C['version'])
+# What the home page can load, in all: every image, the film, the poster, the style and the script.
+weight = sum((ROOT / unquote(urlsplit(l).path)).stat().st_size for l in {x.split('?')[0] for x in home.links} | {'index.html'}
+             if not urlsplit(l).scheme and (l.startswith('assets/') or l == 'index.html') and (ROOT / l).exists())
+if weight > HOME_BUDGET:
+    errors.append(f'index.html: {weight} bytes with media, over {HOME_BUDGET}')
+for v in home.videos:
+    if (ROOT / v.get('data-src', '')).stat().st_size > FILM_BUDGET:
+        errors.append('hero film over 1.5 MB')
 for doc in ['PUBLISH_CHECKLIST.md', 'SCREENSHOTS_NEEDED.md', 'QUITTR_RECHECK.md', 'DOMAIN_MOVE.md']:
     if not (OPS / doc).exists():
         errors.append('_ops/' + doc + ' is missing')
 css = (ROOT / 'assets/site.css').read_text()
 if len(css.encode()) > 20_000:
     errors.append('site.css over 20 KB')
-for need in ['--gutter: 16px', 'prefers-reduced-motion', '#120E17', '#FF9D6C', '#BFD9D3', '#A79BB3', '#FFD08A']:
+for need in ['--gutter: 16px', 'prefers-reduced-motion', '#08080D', '#14151D', '#FF8A4C', '#FFCB5C', '#6EE7CF', '#A3A8C2', '#9B8CFF', 'ui-rounded']:
     if need not in css:
-        errors.append('site.css: Horizon rule missing: ' + need)
+        errors.append('site.css: Daybreak token missing: ' + need)
+for old in ['serif;', 'ui-serif', 'Georgia', '#120E17', '#FF9D6C', 'horizon', 'swell', '@font-face', '@import']:
+    if old in css.replace('sans-serif;', ''):
+        errors.append('site.css: old look or a web font: ' + old)
 
 if errors:
     print('\n'.join(errors))
     print(f'\nFAILED with {len(errors)} problem(s)')
     raise SystemExit(1)
-print(f'OK: {C["shortName"]} ({STATE}, version {C["version"]}): {len(pages)} pages on {SITE}. Metadata, assets, links, schema, FAQ text, sitemap, robots, llms, campaigns, single SITE_URL, freshness, no prices, no ratings, no banned claims, no third parties' + ('.' if STATE == 'live' else ', no unshipped claims.'))
+print(f'OK: {C["shortName"]} (version {C["version"]}): {len(pages)} pages on {SITE}, home {weight / 1000:.0f} KB with all media. Metadata, assets, links, schema, FAQ text, sitemap, robots, llms, campaigns, single SITE_URL, freshness, free/Pro facts, levels, no prices, no ratings, no banned claims, nothing left of 1.x, no third parties.')

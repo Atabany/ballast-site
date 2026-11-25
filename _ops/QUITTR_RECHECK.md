@@ -7,7 +7,25 @@ the page back and publish the rest.
 Rules: the cause is stated as unknown. Make no accusation. Attribute every claim. Keep the conflict
 of interest at the top. Do not imply a link between the 404 Media reporting and the listing.
 
-## Last recheck: 8 November 2026
+## Last recheck: 25 November 2026
+
+Done with curl only. Nothing material changed. The page's dates moved, the AppGoblin row moved to its new crawl date, and the last row now says the Google Play page returned "not found" too (the page QUITTR's own home page links to).
+
+| Item | Result |
+|---|---|
+| Lookup and listing, six storefronts | `resultCount` 0 and HTTP 404 in US, GB, CA, AU, DE, AE. A US App Store search for "quittr" shows no QUITTR listing |
+| quittrapp.com | Online. Home and support pages carry no statement about the listing; home still links to the App Store listing and to a Google Play page, which returns 404 |
+| News | Google News RSS for "QUITTR app App Store removed", "Quittr" and "Quittr Apple" over 45 days: no items. Without a date limit the newest items are from April 2026 and none is about the listing |
+| Social accounts | **Not read**, as before |
+| 404 Media, March and April 2026 | Both still up, no visible update or correction. Public parts still match. Paid parts still unread |
+| AppGoblin | Still "This app was removed from the US App Store and is no longer live"; last crawled 2026-11-21 |
+| Pledgely | Unchanged, still "Updated October 30, 2026" |
+| Apple cancel and refund guides | Steps still match |
+| Google Play help | Resolves and says the same |
+
+The comparison page was rechecked the same day through Apple's lookup: US rating counts for all ten apps, and the quoted lines from Unchaind, Brainbuddy and Rewired are still in their listings. The review notes and the other pricing notes are still from 4 November and the page says so. Apple's Screen Time pages (iOS 26 web content, passcode, the iOS 27 page and 105121) still say what the Screen Time guide says.
+
+## Earlier recheck: 8 November 2026
 
 Done with curl only. Nothing material changed, so the page changed only its dates and the AppGoblin row's crawl date.
 
@@ -23,7 +41,7 @@ Done with curl only. Nothing material changed, so the page changed only its date
 | Apple cancel and refund guides | Steps still match |
 | Google Play help | Still resolves and says the same |
 
-## Previous recheck: 5 November 2026
+## Earlier recheck: 5 November 2026
 
 | Item | Result |
 |---|---|
