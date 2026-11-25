@@ -9,18 +9,9 @@ SITE_URL in _ops/discovery.json is the single source for every absolute URL. To 
 change that one line and rebuild. Page text lives in _ops/content/*.html; nothing in the repo
 root is hand-edited. Standard library only, except --og (Chrome).
 
-RELEASE_STATE in _ops/discovery.json is the one switch between the two sites:
-
-    live       the full Ballast 1.1 site: _ops/content, _ops/live/assets
-    prelaunch  what is true of the app on the App Store today: _ops/content with the edits in
-               _ops/prelaunch_edits.py, whole pages from _ops/prelaunch/pages, facts from the
-               "prelaunch" block in discovery.json, and _ops/prelaunch/assets
-
-Ballast 1.1.0 went live on 7 November 2026. The prelaunch sources (_ops/prelaunch, prelaunch_edits.py,
-the "prelaunch" block and test_states.py) were removed on 8 November, so only live builds now.
-
-Icons, Open Graph images and app screenshots are state assets: the build installs the current
-state's set into assets/ and removes the other's, so 1.1 images are never served before release.
+Icons, Open Graph images and app screenshots live in _ops/live/assets; the build copies them into
+assets/ and removes what is no longer there. The light at the top of each page is drawn by
+_ops/daybreak.py; the hero film is cut from real recordings by _ops/hero_film.py (not part of the build).
 """
 from datetime import date
 from pathlib import Path
@@ -30,13 +21,10 @@ import argparse, base64, hashlib, html, json, re, shutil, subprocess, sys, tempf
 OPS = Path(__file__).resolve().parent
 ROOT = OPS.parent
 sys.path.insert(0, str(OPS))
-import horizon  # noqa: E402
+import daybreak  # noqa: E402
 
-RAW = json.loads((OPS / 'discovery.json').read_text())
-STATE = RAW['RELEASE_STATE']
-assert STATE in ('prelaunch', 'live'), 'RELEASE_STATE must be prelaunch or live'
-C = {**{k: v for k, v in RAW.items() if k != 'prelaunch'}, **(RAW['prelaunch'] if STATE == 'prelaunch' else {})}
-STATE_ASSETS = OPS / STATE / 'assets'
+C = json.loads((OPS / 'discovery.json').read_text())
+LIVE_ASSETS = OPS / 'live/assets'
 SITE = C['SITE_URL']
 assert SITE.startswith('https://') and SITE.endswith('/'), 'SITE_URL must be https and end in /'
 APP = C['appId']
@@ -44,7 +32,6 @@ E = lambda s: html.escape(s, quote=True)
 CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 BADGE = 'assets/app-store-badge.svg'
 ICON = 'assets/icon-112.png'
-SHOT_W, SHOT_H = 390, 844
 
 # Starters adapted from the app's own Services/TriggerPlans.swift. Written to be edited.
 TRIGGERS = [
@@ -97,23 +84,11 @@ def store_url(tag):
 def store_link(tag, cls='store'):
     return (f'<a class="{cls}" href="{E(store_url(tag))}" aria-label="Download Ballast on the App Store">'
             f'<img class="icon" src="{ICON}" alt="" width="56" height="56">'
-            f'<img class="badge" src="{BADGE}" alt="Download on the App Store" width="135" height="45"></a>')
+            f'<img class="badge" src="{BADGE}" alt="Download on the App Store" width="150" height="50"></a>')
 
 
 def page_source(name):
-    """A page's source for the current state. A failed edit stops the build, so the prelaunch
-    site can't quietly drift when the live copy it patches changes."""
-    if STATE == 'live':
-        return (OPS / 'content' / name).read_text()
-    whole = OPS / 'prelaunch/pages' / name
-    if whole.exists():
-        return whole.read_text()
-    import prelaunch_edits
-    s = (OPS / 'content' / name).read_text()
-    for old, new in prelaunch_edits.EDITS.get(name, []):
-        assert s.count(old) == 1, f'{name}: prelaunch edit matches {s.count(old)} times: {old[:70]}'
-        s = s.replace(old, new)
-    return s
+    return (OPS / 'content' / name).read_text()
 
 
 def load_pages():
@@ -145,17 +120,30 @@ def faq_pairs(body):
     return [(plain(q), plain(a)) for q, a in re.findall(r'<h3[^>]*>(.*?)</h3>\s*<p>(.*?)</p>', m[1], re.S)]
 
 
-def slot(name, theme, alt, kind='shot'):
+def slot(name, level, alt, caption=''):
+    """A real capture, or the light itself while a capture is missing. Never a drawn interface."""
     for ext in ('.jpg', '.png'):
-        f = STATE_ASSETS / 'screens' / (name + ext)
+        f = LIVE_ASSETS / 'screens' / (name + ext)
         if f.exists():
             w, h = image_size(f)
-            return f'<figure class="shot"><img src="assets/screens/{name}{ext}" width="{w}" height="{h}" alt="{E(alt)}" loading="lazy" decoding="async"></figure>'
-    return f'<!-- slot:{name} -->{panel(theme)}'
+            cap = f'<figcaption>{caption}</figcaption>' if caption else ''
+            return f'<figure class="shot"><img src="assets/screens/{name}{ext}" width="{w}" height="{h}" alt="{E(alt)}" loading="lazy" decoding="async">{cap}</figure>'
+    return f'<!-- slot:{name} --><div class="panel">{light(level, 200)}</div>'
 
 
-def panel(theme):
-    return f'<div class="panel"><img src="assets/horizon-{theme}.svg" width="800" height="500" alt="" loading="lazy" decoding="async"></div>'
+def light(level, size):
+    assert level in daybreak.NAMES, f'no level called {level}'
+    lazy = ' loading="lazy"' if size < 168 else ''  # Only the one at the top of a page is in the first view.
+    return f'<img class="mast-light" src="assets/light-{level}.svg" alt="" width="{size}" height="{size}"{lazy}>'
+
+
+def levels_list():
+    """The ten levels, from the same data the art is drawn from."""
+    def need(days):
+        return 'where everyone starts' if days == 0 else f'{days} day{"" if days == 1 else "s"} free'
+    return '<ol class="levels">' + ''.join(
+        f'<li><img src="assets/level-{name.lower()}.svg" alt="" width="84" height="84" loading="lazy" decoding="async"><span><strong>{name}</strong>{need(days)}</span></li>'
+        for name, days, *_ in daybreak.LEVELS) + '</ol>'
 
 
 def image_size(path):
@@ -190,8 +178,9 @@ def expand(body, page):
     body = body.replace('{{facts}}', f'<aside class="facts"><h2 id="app-facts">App facts</h2><p>{E(C["facts"])}</p><p class="small">Made by <a href="about.html">{E(C["author"])}</a>. Facts checked {E(C["factsChecked"])}.</p></aside>')
     body = re.sub(r'\{\{store\}\}', lambda _: store_link(tag), body)
     body = re.sub(r'\{\{cta\|(.*?)\|(.*?)\}\}', lambda m: f'<aside class="cta"><h2 class="cta-title">{m[1]}</h2><p>{m[2]}</p>{store_link(tag)}</aside>', body, flags=re.S)
-    body = re.sub(r'\{\{slot\|(.*?)\|(.*?)\|(.*?)\}\}', lambda m: slot(m[1], m[2], m[3]), body)
-    body = re.sub(r'\{\{panel\|(\w+)\}\}', lambda m: panel(m[1]), body)
+    body = body.replace('{{levels}}', levels_list())
+    body = re.sub(r'\{\{slot\|([^|{}]*)\|([^|{}]*)\|([^|{}]*)(?:\|([^|{}]*))?\}\}', lambda m: slot(m[1], m[2], m[3], m[4] or ''), body)
+    body = re.sub(r'\{\{light\|(\w+)\|(\d+)\}\}', lambda m: light(m[1], int(m[2])), body)
     return body.strip()
 
 
@@ -248,11 +237,11 @@ def head(page, pages, css_v, body, prefix):
         out.append('<meta name="robots" content="noindex">')
     else:
         out.append(f'<link rel="canonical" href="{url}">')
-    out += [f'<meta name="apple-itunes-app" content="app-id={APP}">', '<meta name="color-scheme" content="dark">', '<meta name="theme-color" content="#120E17">',
+    out += [f'<meta name="apple-itunes-app" content="app-id={APP}">', '<meta name="color-scheme" content="dark">', '<meta name="theme-color" content="#08080D">',
             f'<meta property="og:type" content="{"article" if page["kind"] in ("article", "tool") else "website"}">', '<meta property="og:site_name" content="Ballast">',
             f'<meta property="og:title" content="{E(page["title"])}">', f'<meta property="og:description" content="{E(page["description"])}">',
             f'<meta property="og:url" content="{url}">', f'<meta property="og:image" content="{og}">', '<meta property="og:image:width" content="1200">', '<meta property="og:image:height" content="630">',
-            f'<meta property="og:image:alt" content="{E(page.get("og_alt", "Layered flat swells under a dawn sky, with the words: " + page["h1"]))}">',
+            f'<meta property="og:image:alt" content="{E(page.get("og_alt", "The words: " + plain(page["h1"]) + " Beside them, a screen from the Ballast app on an iPhone."))}">',
             '<meta name="twitter:card" content="summary_large_image">', f'<meta name="twitter:title" content="{E(page["title"])}">', f'<meta name="twitter:description" content="{E(page["description"])}">', f'<meta name="twitter:image" content="{og}">',
             f'<link rel="icon" type="image/png" sizes="64x64" href="{prefix}assets/icon-64.png">', f'<link rel="apple-touch-icon" href="{prefix}assets/icon-180.png">',
             f'<link rel="stylesheet" href="{prefix}assets/site.css?v={css_v}">']
@@ -266,7 +255,7 @@ def site_header(page):
     tag = page['campaign']
     nav = [('if-then-urge-plan.html', 'Plan tool'), ('index.html#guides', 'Guides'), ('best-apps-to-quit-porn-compared.html', 'Compare'), ('about.html', 'About')]
     links = ''.join(f'<a href="{h}"' + (' aria-current="page"' if h == page['file'] else '') + f'>{t}</a>' for h, t in nav)
-    return (f'<header class="site-head"><div class="wrap head-row"><a class="brand" href="index.html"><img src="assets/icon-64.png" alt="" width="32" height="32"><span>Ballast</span></a>'
+    return (f'<header class="site-head"><div class="wrap head-row"><a class="brand" href="index.html"><img src="assets/icon-64.png" alt="" width="34" height="34"><span>Ballast</span></a>'
             f'<nav class="site-nav" aria-label="Main">{links}</nav>'
             f'<a class="head-badge" href="{E(store_url(tag))}" aria-label="Download Ballast on the App Store"><img src="{BADGE}" alt="Download on the App Store" width="120" height="40"></a></div></header>')
 
@@ -287,23 +276,27 @@ def human_date(iso):
 def render(page, pages, css_v):
     body = expand(page['body'], page)
     prefix = urlsplit(SITE).path if page['kind'] == '404' else ''
-    parts = [head(page, pages, css_v, body, prefix), '<body>', '<a class="skip" href="#main">Skip to content</a>', site_header(page)]
+    tint = page.get('tint', 'ember')
+    glow = '<div class="glow' + ('' if tint == 'ember' else f' glow-{tint}') + '"></div>'
+    parts = [head(page, pages, css_v, body, prefix), '<body>', '<a class="skip" href="#main">Skip to content</a>', glow, site_header(page)]
     if page['kind'] == 'home':
         parts.append(f'<main id="main">{body}</main>')
     else:
-        band = '<div class="band"><img src="assets/horizon-band.svg" alt="" width="1600" height="160"></div>'
-        intro = [f'<nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Ballast</a> <span aria-hidden="true">/</span> <span>{E(page["crumb"])}</span></nav>' if page['kind'] != '404' else '', f'<h1>{page["h1"]}</h1>']
+        crumbs = f'<nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Ballast</a> <span aria-hidden="true">/</span> <span>{E(page["crumb"])}</span></nav>' if page['kind'] != '404' else ''
+        byline = ''
         if page['kind'] in ('article', 'tool'):
-            intro.append(f'<p class="byline">By <a href="about.html">{E(C["author"])}</a>, developer of Ballast · Updated {human_date(page["updated"])}</p>')
+            byline = f'<p class="byline">By <a href="about.html">{E(C["author"])}</a>, developer of Ballast · Updated {human_date(page["updated"])}</p>'
         elif page['kind'] in ('legal', 'about'):
-            intro.append(f'<p class="byline">Updated {human_date(page["updated"])}</p>')
+            byline = f'<p class="byline">Updated {human_date(page["updated"])}</p>'
+        intro = []
         if page.get('disclosure'):
             intro.append(f'<p class="disclosure"><strong>Conflict of interest:</strong> {page["disclosure"]}</p>')
         if page.get('answer'):
             intro.append(f'<p class="answer">{page["answer"]}</p>')
         if page.get('toc'):
             intro.append(toc(body))
-        parts.append(f'{band}<main id="main" class="wrap prose">' + ''.join(intro) + body + '</main>')
+        parts.append(f'<main id="main"><div class="wrap mast">{light(page.get("light", "ember"), 168)}<div>{crumbs}<h1>{page["h1"]}</h1>{byline}</div></div>'
+                     '<div class="wrap prose">' + ''.join(intro) + body + '</div></main>')
     parts.append(site_footer(page, pages))
     if page.get('script'):
         parts.append(f'<script src="assets/{page["script"]}" defer></script>')
@@ -332,46 +325,66 @@ def write_support_files(pages, out):
     head_txt = f'# {C["storeName"]}\n\n> {C["promise"]} Official website by {C["author"]}.\n\n{C["facts"]}\n\nApp Store listing: {store}\nFacts checked: {C["factsChecked"]}\n'
     tail = '\nThis file is a plain reference for readers and assistants. It does not establish search ranking or AI recommendations.\n'
     (out / 'llms.txt').write_text(head_txt + '\n## Pages\n\n' + lines(core, False) + '\n\n## Guides and tools\n\n' + lines(guides, False) + '\n' + tail)
-    full = (OPS / ('llms-product.md' if STATE == 'live' else 'prelaunch/llms-product.md')).read_text().strip()
+    full = (OPS / 'llms-product.md').read_text().strip()
     (out / 'llms-full.txt').write_text(head_txt + '\n' + full + '\n\n## Pages\n\n' + lines(core, True) + '\n\n## Guides and tools\n\n' + lines(guides, True) + '\n' + tail)
 
 
-def write_art(out):
+def write_art(pages, out):
     art = out / 'assets'
     art.mkdir(exist_ok=True)
-    for theme, kw in {'night': dict(horizon=0.46), 'dawn': dict(horizon=0.46, sun_x=0.3), 'day': dict(horizon=0.46, sun_x=0.62, sun_rise=0.16)}.items():
-        (art / f'horizon-{theme}.svg').write_text(horizon.scene(800, 500, theme, **kw))
-    (art / 'horizon-band.svg').write_text(horizon.scene(1600, 160, 'dawn', horizon=0.40, sun_x=None))
+    for i, name in enumerate(daybreak.NAMES):
+        (art / f'level-{name}.svg').write_text(daybreak.light(i, side=96))
+    used = {p.get('light', 'ember') for p in pages if p['kind'] != 'home'} | set(re.findall(r'\{\{light\|(\w+)\|', ''.join(p['body'] for p in pages)))
+    for name in used:
+        i = daybreak.NAMES.index(name)
+        (art / f'light-{name}.svg').write_text(daybreak.light(i, progress=(i + 1) / len(daybreak.NAMES) if i + 1 < len(daybreak.NAMES) else 0.96))
+    for f in art.glob('light-*.svg'):
+        if f.stem.removeprefix('light-') not in used:
+            f.unlink()
 
 
-def install_state_assets(out):
-    """Put this state's icons, Open Graph images and screenshots in assets/, and nothing of the other's."""
-    for base in (OPS / 'live/assets', OPS / 'prelaunch/assets'):
-        for f in base.rglob('*'):
-            target = out / 'assets' / f.relative_to(base)
-            if f.is_file() and target.is_file():
-                target.unlink()
+def install_assets(out):
+    """Put the icons, Open Graph images and screenshots in assets/, and drop any no longer supplied."""
     for name in ('screens', 'og'):
         folder = out / 'assets' / name
-        if folder.is_dir() and not any(folder.iterdir()):
-            folder.rmdir()
-    for f in STATE_ASSETS.rglob('*'):
-        if f.is_file():
-            target = out / 'assets' / f.relative_to(STATE_ASSETS)
+        if folder.is_dir():
+            shutil.rmtree(folder)
+    for f in LIVE_ASSETS.rglob('*'):
+        if f.is_file() and f.name != '.DS_Store':
+            target = out / 'assets' / f.relative_to(LIVE_ASSETS)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(f, target)
 
 
+OG_CSS = """html,body{margin:0;background:#08080D}*{box-sizing:border-box}
+.w{position:relative;width:1200px;height:630px;overflow:hidden;background:radial-gradient(620px 420px at 4% 0,rgba(255,138,76,.3),transparent 70%),radial-gradient(560px 560px at 82% 60%,rgba(44,201,174,.26),transparent 70%),#08080D}
+.t{position:absolute;left:68px;top:40px;height:440px;width:716px;display:flex;align-items:center;color:#F6F7FB;font:800 72px/1.12 ui-rounded,"SF Pro Rounded",system-ui,sans-serif;letter-spacing:-.022em}
+.t p{margin:0;text-wrap:balance}.t.short{font-size:96px;line-height:1.06}.t.long{font-size:60px}
+.hl{display:inline-block;color:#08080D;background:linear-gradient(100deg,#FF6A48,#FF8A4C 45%,#FFCB5C);padding:.02em .22em .1em;margin-left:-.06em;border-radius:.22em;transform:rotate(-2deg);box-shadow:0 14px 60px rgba(255,120,70,.45)}
+.b{position:absolute;left:68px;bottom:54px;color:#F6F7FB;font:700 30px ui-rounded,"SF Pro Rounded",system-ui,sans-serif;display:flex;align-items:center;gap:16px}
+.b img{width:64px;height:64px;border-radius:15px}.b span{color:#B4B8CB;font-weight:600}
+.p{position:absolute;right:74px;top:58px;width:318px;border-radius:46px;box-shadow:0 0 0 1px #2A2D3B,0 0 0 9px #050508,0 0 0 11px #33364A,0 40px 90px rgba(0,0,0,.6)}"""
+
+
 def make_og(pages):
-    target = STATE_ASSETS / 'og'
+    """1200x630 images: the page's title and a real capture of the app."""
+    target = LIVE_ASSETS / 'og'
     target.mkdir(parents=True, exist_ok=True)
-    css = 'html,body{margin:0;background:#120E17}.w{position:relative;width:1200px;height:630px;overflow:hidden}svg{position:absolute;left:0;bottom:0}.t{position:absolute;left:72px;right:72px;top:64px;color:#F6EFE9;font:500 66px/1.1 "New York","Iowan Old Style",Georgia,serif;letter-spacing:-.01em}.b{position:absolute;left:72px;bottom:46px;color:#F6EFE9;font:600 28px -apple-system,sans-serif;letter-spacing:.02em;display:flex;align-items:center;gap:14px}.b img{width:56px;height:56px;border-radius:13px}'
-    icon = 'data:image/png;base64,' + base64.b64encode((STATE_ASSETS / 'icon-112.png').read_bytes()).decode()
+    data = lambda f, kind: f'data:image/{kind};base64,' + base64.b64encode(f.read_bytes()).decode()
+    icon = data(LIVE_ASSETS / 'icon-112.png', 'png')
     with tempfile.TemporaryDirectory() as tmp:
         for p in pages:
             stem = Path(p['file']).stem
-            title = p.get('og_title', plain(p['h1']))
-            doc = f'<!doctype html><meta charset="utf-8"><style>{css}</style><div class="w">{horizon.scene(1200, 630, "dawn", horizon=0.62, sun_x=0.78, inner_only=False).replace("<svg", "<svg ", 1)}<div class="t">{E(title)}</div><div class="b"><img src="{icon}" alt="">Ballast</div></div>'
+            title = E(p.get('og_title', plain(p['h1'])))
+            mark = E(p.get('og_hl', ''))
+            assert not mark or mark in title, f'{stem}: og_hl is not in the title'
+            if mark:
+                title = title.replace(mark, f'<span class="hl">{mark}</span>')
+            shot = LIVE_ASSETS / 'screens' / (p['og_shot'] + '.jpg') if p.get('og_shot') else ROOT / 'assets/ballast-panic-hero-poster.jpg'
+            words = len(plain(title))
+            size = ' short' if words <= 28 else ' long' if words > 44 else ''
+            doc = (f'<!doctype html><meta charset="utf-8"><style>{OG_CSS}</style><div class="w"><img class="p" src="{data(shot, "jpeg")}" alt="">'
+                   f'<div class="t{size}"><p>{title}</p></div><div class="b"><img src="{icon}" alt="">Ballast <span>{urlsplit(SITE).netloc}</span></div></div>')
             f = Path(tmp) / f'{stem}.html'
             f.write_text(doc)
             png = target / f'{stem}.png'
@@ -384,7 +397,7 @@ def make_og(pages):
                 im = Image.open(png).convert('RGB')
                 if im.size != (1200, 630):
                     im = im.crop((0, 0, 1200, 630))
-                im.quantize(colors=96, dither=Image.Dither.NONE).save(png, optimize=True)
+                im.save(png, optimize=True)  # True colour: a palette posterises the light.
             except ImportError:
                 pass
 
@@ -401,11 +414,11 @@ def main():
     for p in pages:
         (out / p['file']).write_text(render(p, pages, css_v))
     write_support_files(pages, out)
-    write_art(out)
+    write_art(pages, out)
     if a.og:
         make_og(pages)
-    install_state_assets(out)
-    print(f'Built {len(pages)} pages ({STATE}) for {SITE} into {out}')
+    install_assets(out)
+    print(f'Built {len(pages)} pages for {SITE} into {out}')
 
 
 if __name__ == '__main__':
