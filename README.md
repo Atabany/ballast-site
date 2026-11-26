@@ -1,6 +1,6 @@
 # ballast-site
 
-The public website for **Ballast: Quit PMO & Blocker**, an iPhone app. Plain HTML, one CSS file, two small scripts (the hero film's pause control and the plan builder). No framework, web fonts, cookies, analytics or third-party requests.
+The public website for **Ballast: Quit PMO Addiction**, an iPhone app. Plain HTML, one CSS file, two small scripts (the hero film's pause control and the plan builder). No framework, web fonts, cookies, analytics or third-party requests.
 
 ## How it's built
 
